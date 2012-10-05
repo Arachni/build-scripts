@@ -27,7 +27,7 @@ This script will download this repo and start the build process (by running ```b
 under ```ARACHNI_BUILD_DIR```, ultimately leaving you with a fresh,
 self-contained environment for/with Arachni.
 
-Simply run: ```wget -O - http://dl.dropbox.com/u/11210438/flockonus-stack.sh | bash```
+Simply run: ```wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash```
 
 **Caution**: Running the script again will **REMOVE** the previous environment
 so be sure to move any reports (or other important files) out of the old one
