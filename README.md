@@ -16,11 +16,11 @@ See ```lib/setenv.sh``` for available options.
 
 This script:
 
-* Creates a directory structure to host a fresh environment
-* Downloads all library dependencies and installs them in the environment
-* Downloads Ruby and installs it in the environment
-* Configures Ruby and installs a few vital gems
-* Tests and installs Arachni in the environment
+* Creates a directory structure to host a fresh environment.
+* Downloads all library dependencies and installs them in the environment.
+* Downloads Ruby and installs it in the environment.
+* Configures Ruby and installs a few vital gems.
+* Tests and installs Arachni in the environment.
 
 The created environment is self-sufficient in providing the required runtime
 dependencies for Arachni and can be moved between systems of identical
