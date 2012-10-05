@@ -28,6 +28,9 @@ build_scripts_outfile="build-scripts.tar.gz"
 mkdir -p $build_dir
 cd $build_dir
 
+# set it to the absolute path
+export ARACHNI_BUILD_DIR=`pwd`
+
 cat<<EOF
 
                Arachni build bootstrap (experimental)
@@ -59,6 +62,7 @@ for dep in $deps; do
 done
 
 if [[ $fail ]]; then
+    echo
     echo "Please install the missing dependencies and try again."
     exit 1
 fi
@@ -81,12 +85,25 @@ echo '  * Extracting'
 tar xvf $build_scripts_outfile > /dev/null
 rm $build_scripts_outfile
 
+if [[ -z "$1" ]]; then
+    callback_script=Arachni-build-scripts-*/build.sh
+else
+    callback_script=Arachni-build-scripts-*/$1.sh
+fi
+
+ls $callback_script 2>> /dev/null 1>> /dev/null
+if [[ $? != 0 ]]; then
+    echo
+    echo "'$1' isn't a valid build-script name."
+    exit 1
+fi
+
 echo '  * Starting the build'
 
 echo
 echo '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 echo
 
-bash Arachni-build-scripts-*/build.sh
+bash $callback_script
 rm -rf Arachni-build-scripts-*
 

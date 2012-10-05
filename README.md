@@ -20,14 +20,20 @@ the build scripts.
 
 **Honors**:
 
-* ```ARACHNI_BUILD_BRANCH``` -- Which branch (or tag) of the Arachni repository to build (defaults to ```experimental```).
 * ```ARACHNI_BUILD_DIR``` -- Name of the directory to use for the build process (defaults to ```arachni-build-dir```).
+* Options of the corresponding action script (defaults to ```build``` which runs ```build.sh```)
 
-This script will download this repo and start the build process (by running ```build.sh```)
-under ```ARACHNI_BUILD_DIR```, ultimately leaving you with a fresh,
-self-contained environment for/with Arachni.
+This script will:
 
-Simply run: ```wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash```
+* Change to the ```ARACHNI_BUILD_DIR``` directory (and create it if it doesn't already exist).
+* Download this repository.
+* Execute the script that corresponds to the specified action (defaults to ```build``` which runs ```build.sh```)
+ 
+To get a fresh, self-contained Arachni environment simply run:
+```wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash```
+
+Or, specify a different action, like so:
+```wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash -s build_and_package```
 
 **Caution**: Running the script again will **REMOVE** the previous environment
 so be sure to move any reports (or other important files) out of the old one
