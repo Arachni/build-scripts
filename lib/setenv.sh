@@ -32,7 +32,7 @@ fi
 #
 # Working dir for the build and packaging process.
 #
-# Used by build_all_and_push.sh
+# Used by build_all_and_push.sh and bootstrap.sh
 #
 if [ -z "$ARACHNI_BUILD_DIR" ]; then
     export ARACHNI_BUILD_DIR="$HOME/builds/nightlies"

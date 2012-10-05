@@ -8,6 +8,31 @@ See ```lib/setenv.sh``` for available options.
 
 ## Script breakdown
 
+All of these scripts will leave behind a directory called ```arachni-clean```
+containing an environment which includes system library dependencies
+(like _libxml_, _curl_, _openssl_ and more) and no Gems nor Arachni.
+
+That directory will be used as a base in order to avoid re-downloading,
+re-configuring and re-compiling all those dependencies on subsequent runs of
+the build scripts.
+
+### bootstrap.sh
+
+**Honors**:
+
+* ```ARACHNI_BUILD_BRANCH``` -- Which branch (or tag) of the Arachni repository to build (defaults to ```experimental```).
+* ```ARACHNI_BUILD_DIR``` -- Name of the directory to use for the build process (defaults to ```arachni-build-dir```).
+
+This script will download this repo and start the build process (by running ```build.sh```)
+under ```ARACHNI_BUILD_DIR```, ultimately leaving you with a fresh,
+self-contained environment for/with Arachni.
+
+Simply run: ```wget -O - http://dl.dropbox.com/u/11210438/flockonus-stack.sh | bash```
+
+**Caution**: Running the script again will **REMOVE** the previous environment
+so be sure to move any reports (or other important files) out of the old one
+before running it again.
+
 ### build.sh
 
 **Honors**:
@@ -20,7 +45,7 @@ This script:
 * Downloads all library dependencies and installs them in the environment.
 * Downloads Ruby and installs it in the environment.
 * Configures Ruby and installs a few vital gems.
-* Tests and installs Arachni in the environment.
+* Downloads and installs Arachni in the environment.
 
 The created environment is self-sufficient in providing the required runtime
 dependencies for Arachni and can be moved between systems of identical

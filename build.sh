@@ -65,6 +65,7 @@ deps="
     make
     expr
     perl
+    tar
 "
 for dep in $deps; do
     echo -n "  * $dep"
