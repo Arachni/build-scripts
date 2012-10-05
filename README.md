@@ -14,6 +14,8 @@ See ```lib/setenv.sh``` for available options.
 
 * ```ARACHNI_BUILD_BRANCH```
 
+This script:
+
 * Creates a directory structure to host a fresh environment
 * Downloads all library dependencies and installs them in the environment
 * Downloads Ruby and installs it in the environment
@@ -67,7 +69,7 @@ to create 32bit packages.
 * ```ARACHNI_OSX_BUILD_AND_PACKAGE```
 * ```ARACHNI_RSYNC_DEST```
 
-The script:
+This script:
 
 * Changes directory to ```ARACHNI_BUILD_DIR```.
 * Drives ```build_and_package.sh```, ```cross_build_and_package.sh``` and executes
