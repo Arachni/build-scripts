@@ -10,7 +10,9 @@ See ```lib/setenv.sh``` for available options.
 
 ### build.sh
 
-**Honors**: ```ARACHNI_BUILD_BRANCH```
+**Honors**:
+
+* ```ARACHNI_BUILD_BRANCH```
 
 * Creates a directory structure to host a fresh environment
 * Downloads all library dependencies and installs them in the environment
@@ -42,15 +44,28 @@ will continue from the point it left off.
 
 ### build_and_package.sh
 
+**Honors**:
+
+* ```ARACHNI_BUILD_BRANCH```
 
 Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
 
 ### cross_build_and_package.sh
 
+**Honors**:
+
+* ```ARACHNI_BUILD_BRANCH```
+
 Runs ```build_and_package.sh``` from inside a 32bit chroot environment in order
 to create 32bit packages.
 
 ### build_all_and_push.sh
+
+**Honors**:
+
+* ```ARACHNI_BUILD_DIR```
+* ```ARACHNI_OSX_BUILD_AND_PACKAGE```
+* ```ARACHNI_RSYNC_DEST```
 
 * Changes directory to ```ARACHNI_BUILD_DIR```.
 * Drives ```build_and_package.sh```, ```cross_build_and_package.sh``` and executes
