@@ -33,6 +33,9 @@ Simply run: ```wget -O - https://raw.github.com/Arachni/build-scripts/master/boo
 so be sure to move any reports (or other important files) out of the old one
 before running it again.
 
+**Notice**: If you accidentally cancel the process don't worry, running it again
+will continue from where it left off.
+
 ### build.sh
 
 **Honors**:
