@@ -57,7 +57,7 @@ cat<<EOF
 
 Completed successfully!
 
-Archive is at: $archive
+Archive is at: `readlink_f $archive`
 
 Cheers,
 The Arachni team.
