@@ -24,13 +24,7 @@
 #     Dan Woodruff <daniel.woodruff@gmail.com> -- Patches for OSX and testing
 #
 
-path_to_readlink_function=`dirname $0`"/lib/readlink_f.sh"
-if [[ ! -e "$path_to_readlink_function" ]]; then
-    echo "Could not find $path_to_readlink_function"
-    exit
-fi
-
-source $path_to_readlink_function
+for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
 
 cat<<EOF
 
@@ -89,14 +83,10 @@ fi
 
 echo
 
-if [ -z "$ARACHNI_BUILD_BRANCH" ]; then
-    ARACHNI_BUILD_BRANCH="experimental"
-    echo "---- No branch/tag specified, defaulting to: $ARACHNI_BUILD_BRANCH"
-fi
 
-echo "---- Building branch/tag: $ARACHNI_BUILD_BRANCH"
+echo "---- Building branch/tag: `branch`"
 
-arachni_tarball_url="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
+arachni_tarball_url=`tarball_url`
 
 #
 # All system library dependencies in proper order
@@ -588,8 +578,8 @@ rm -rf $root/gems/doc/*
 echo "  * Removing gem cache"
 rm -rf $root/gems/cache/*
 
-cp `dirname $scriptdir`/README.tpl $root/README
-cp `dirname $scriptdir`/LICENSE.tpl $root/LICENSE
+cp `dirname $scriptdir`/templates/README.tpl $root/README
+cp `dirname $scriptdir`/templates/LICENSE.tpl $root/LICENSE
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then

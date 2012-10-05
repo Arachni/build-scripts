@@ -14,35 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-path_to_readlink_function=`dirname $0`"/lib/readlink_f.sh"
-if [[ ! -e "$path_to_readlink_function" ]]; then
-    echo "Could not find $path_to_readlink_function"
-    exit
-fi
-
-source $path_to_readlink_function
+for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
 
 root="$(dirname "$(readlink_f "${0}")")"
-nightlies="$HOME/builds/nightlies"
 
 package_patterns="arachni*.gz"
-dest="segfault@downloads.arachni-scanner.com:www/arachni/downloads/nightlies/"
-
-rm -f $package_patterns
 
 output_log_32bit="$root/32bit.log"
 output_log_64bit="$root/64bit.log"
 
-rm -f $output_log_32bit
-rm -f $output_log_64bit
-
-if [ -n "${OSX_SSH_CMD+x}" ]; then
+if [ -n "${ARACHNI_OSX_BUILD_AND_PACKAGE+x}" ]; then
     output_log_osx="$root/osx.log"
     rm -f $output_log_osx
 fi
 
-mkdir -p $nightlies
-cd $nightlies
+mkdir -p `build_dir`
+cd `build_dir`
 
 if ls *.lock > /dev/null 2>&1; then
     echo "Found a lock file, another build process is in progress or the dir is dirty.";
@@ -54,15 +41,17 @@ if ls *.pid > /dev/null 2>&1; then
     exit 1
 fi
 
-rm -f arachn*.gz arachn*installer.sh
-rm -f *.log
+rm -f $package_patterns
 
-echo "Building packages, this could take a while; to monitor the progress of the:"
+rm -f $output_log_32bit
+rm -f $output_log_64bit
+
+echo "Building packages, this can take a while; to monitor the progress of the:"
 echo "  * 32bit build: tail -f $output_log_32bit"
 echo "  * 64bit build: tail -f $output_log_64bit"
 
 
-if [ -n "${OSX_SSH_CMD+x}" ]; then
+if [ -n "${ARACHNI_OSX_BUILD_AND_PACKAGE+x}" ]; then
     echo "  * OSX build: tail -f $output_log_osx"
 fi
 
@@ -81,9 +70,9 @@ bash -c "touch 64bit_build.lock && \
 
 echo $! > 64bit.pid
 
-if [ -n "${OSX_SSH_CMD+x}" ]; then
+if [ -n "${ARACHNI_OSX_BUILD_AND_PACKAGE+x}" ]; then
     bash -c "touch osx_build.lock && \
-        eval \"$OSX_SSH_CMD\" 2>> $output_log_osx 1>> $output_log_osx &&\
+        eval \"$ARACHNI_OSX_BUILD_AND_PACKAGE\" 2>> $output_log_osx 1>> $output_log_osx &&\
         rm osx_build.lock" &
 
     echo $! > 64bit.pid
@@ -93,7 +82,7 @@ fi
 while [ ! -e "32bit_build.lock" ]; do sleep 0.1; done
 while [ ! -e "64bit_build.lock" ]; do sleep 0.1; done
 
-if [ -n "${OSX_SSH_CMD+x}" ]; then
+if [ -n "${ARACHNI_OSX_BUILD_AND_PACKAGE+x}" ]; then
     while [ ! -e "osx_build.lock" ]; do sleep 0.1; done
 fi
 
@@ -105,7 +94,7 @@ echo '  * 32bit package ready'
 while [ -e "64bit_build.lock" ]; do sleep 0.1; done
 echo '  * 64bit package ready'
 
-if [ -n "${OSX_SSH_CMD+x}" ]; then
+if [ -n "${ARACHNI_OSX_BUILD_AND_PACKAGE+x}" ]; then
     while [ -e "osx_build.lock" ]; do sleep 0.1; done
     echo '  * OSX package ready'
 fi
@@ -117,9 +106,9 @@ rm *.pid
 echo ' - done.'
 echo
 
-echo 'Pushing to server, this could take a while also...'
+echo 'Pushing to server, this can also take a while...'
 rsync --human-readable --progress --executability --compress --stats \
-    $package_patterns $dest
+    $package_patterns `rsync_destination`
 
 echo
 echo 'All done.'

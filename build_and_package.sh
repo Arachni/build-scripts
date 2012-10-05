@@ -14,42 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-path_to_readlink_function=`dirname $0`"/lib/readlink_f.sh"
-if [[ ! -e "$path_to_readlink_function" ]]; then
-    echo "Could not find $path_to_readlink_function"
-    exit
-fi
-
-source $path_to_readlink_function
+for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
 
 root="$(dirname "$(readlink_f "${0}")")"
 
-if [ -z "$ARACHNI_BUILD_BRANCH" ]; then
-    ARACHNI_BUILD_BRANCH="experimental"
-fi
+echo "---- Building version: `version`"
 
-echo "Getting system version from the '$ARACHNI_BUILD_BRANCH' branch/tag."
-version=`wget -q -O - https://raw.github.com/Arachni/arachni/$ARACHNI_BUILD_BRANCH/lib/version`
-
-if [[ $? != 0 ]]; then
-    echo "Could not determine the version number of '$ARACHNI_BUILD_BRANCH'."
-    exit 1
-fi
-
-echo "Building version: $version"
-
-os=`uname -s | awk '{print tolower($0)}'`
-
-if [[ -e "/32bit-chroot" ]]; then
-    arch="i386"
-else
-    arch=`uname -m`
-fi
-
-pkg_name="arachni-$version"
-
-installer_name="$pkg_name-$os-$arch-installer.sh"
-archive="$pkg_name-$os-$arch.tar.gz"
+pkg_name="arachni-`version`"
+archive="$pkg_name-`operating_system`-`architecture`.tar.gz"
 
 cat<<EOF
 
@@ -58,14 +30,13 @@ cat<<EOF
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 EOF
+
 bash "$root/build.sh" $pkg_name
 
 if [[ "$?" != 0 ]]; then
     echo "============ Building failed."
     exit 1
 fi
-
-
 
 cat<<EOF
 
@@ -74,14 +45,9 @@ cat<<EOF
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 EOF
-bash "$root/package.sh" $installer_name $pkg_name
 
-if [[ "$?" != 0 ]]; then
-    echo "============ Packaging failed."
-    exit 1
-fi
-
-mv "$installer_name.tar.gz" $archive
+echo "  * Compressing build dir ($pkg_name)"
+tar czf $archive -C `dirname $(readlink_f $pkg_name )` $pkg_name
 
 echo
 cat<<EOF
@@ -91,8 +57,7 @@ cat<<EOF
 
 Completed successfully!
 
-Archive is at:   $archive
-Installer is at: $installer_name
+Archive is at: $archive
 
 Cheers,
 The Arachni team.
