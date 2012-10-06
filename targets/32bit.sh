@@ -20,8 +20,8 @@ if [ -z "$ARACHNI_32BIT_CHROOT" ]; then
 fi
 
 echo "wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash -s build_and_package" |
-    schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~
+    schroot --chroot=$ARACHNI_32BIT_CHROOT -p -d ~
 
 chroot_path=`schroot --chroot=$ARACHNI_32BIT_CHROOT --location 2>> /dev/null`
 
-mv "$chroot_path/$HOME/$(build_dir)/$(package_patterns)" . &> /dev/null
+mv $chroot_path/$(build_dir)/$(package_patterns) . &> /dev/null
