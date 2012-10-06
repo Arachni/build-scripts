@@ -19,9 +19,8 @@ if [ -z "$ARACHNI_32BIT_CHROOT" ]; then
     exit 1
 fi
 
-schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~ \
-    "wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh |
-        bash -s build_and_package"
+echo "wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash -s build_and_package" |
+    schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~
 
 chroot_path=`schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~ echo ~ 2>> /dev/null`
 
