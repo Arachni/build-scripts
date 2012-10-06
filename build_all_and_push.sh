@@ -82,9 +82,9 @@ rm *.pid
 echo ' - done.'
 echo
 
-# echo 'Pushing to server, this can also take a while...'
-# rsync --human-readable --progress --executability --compress --stats \
-#     $(package_patterns) $(rsync_destination)
+echo 'Pushing to server, this can also take a while...'
+rsync --human-readable --progress --executability --compress --stats \
+    $(package_patterns) $(rsync_destination)
 
 echo
 echo 'All done.'
