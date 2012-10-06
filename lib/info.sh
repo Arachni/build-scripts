@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source `dirname $0`"/lib/setenv.sh"
-
 # Branch to build
 branch(){
     echo $ARACHNI_BUILD_BRANCH

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
+source `dirname $0`/lib/setenv.sh
 
 root="$(dirname "$(readlink_f "${0}")")"
 

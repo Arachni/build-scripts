@@ -86,21 +86,11 @@ will continue from the point it left off.
 
 Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
 
-### cross_build_and_package.sh
-
-**Honors**:
-
-* ```ARACHNI_BUILD_BRANCH```
-
-Runs ```build_and_package.sh``` from inside a 32bit chroot environment in order
-to create 32bit packages.
-
 ### build_all_and_push.sh
 
 **Honors**:
 
 * ```ARACHNI_BUILD_DIR```
-* ```ARACHNI_OSX_BUILD_AND_PACKAGE```
 * ```ARACHNI_RSYNC_DEST```
 
 This script:

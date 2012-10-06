@@ -14,7 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-chroot_path="/var/chroots/32bit"
+if [ -z "$ARACHNI_32BIT_CHROOT" ]; then
+    echo 'ARACHNI_32BIT_CHROOT has not been set or is empty.'
+    exit 1
+fi
 
-schroot --chroot=32bit -d /home/zapotek/builds -p '../arachni/external/scripts/build_and_package.sh'
-mv $chroot_path/home/zapotek/builds/*.* . &> /dev/null
+schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~ \
+    "wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh |
+        bash -s build_and_package"
+
+chroot_path=`schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~ echo ~ 2>> /dev/null`
+
+mv "$chroot_path/$HOME/$(build_dir)/$(package_patterns)" "$(build_dir)/" &> /dev/null

@@ -24,7 +24,7 @@
 #     Dan Woodruff <daniel.woodruff@gmail.com> -- Patches for OSX and testing
 #
 
-for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
+source `dirname $0`/lib/setenv.sh
 
 cat<<EOF
 
