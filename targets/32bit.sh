@@ -24,4 +24,4 @@ echo "wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh
 
 chroot_path=`schroot --chroot=$ARACHNI_32BIT_CHROOT -d ~ echo ~ 2>> /dev/null`
 
-mv "$chroot_path/$HOME/$(build_dir)/$(package_patterns)" "$(build_dir)/" &> /dev/null
+mv "$chroot_path/$HOME/$(build_dir)/$(package_patterns)" . &> /dev/null
