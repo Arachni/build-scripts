@@ -18,6 +18,9 @@ readlink_f(){
     # from: http://stackoverflow.com/a/1116890
     # Mac OS specific because readlink -f doesn't work
     if [[ "Darwin" == "$(uname)" ]]; then
+
+        TARGET_FILE=$1
+
         cd `dirname $TARGET_FILE`
         TARGET_FILE=`basename $TARGET_FILE`
 
