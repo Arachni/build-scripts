@@ -82,7 +82,7 @@ wget -c --progress=dot --no-check-certificate $build_script_tarball -O $build_sc
 echo -e "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b                           "
 
 echo '  * Extracting'
-tar xvf $build_scripts_outfile > /dev/null
+tar xvf $build_scripts_outfile 2>> /dev/null 1>> /dev/null
 rm $build_scripts_outfile
 
 if [[ -z "$1" ]]; then
