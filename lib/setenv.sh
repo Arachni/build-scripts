@@ -4,6 +4,8 @@
 
 export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
 
+export ARACHNI_PACKAGE_PATTERNS="arachni-*.gz"
+
 #
 # Options and their defaults -- Set as desired
 #

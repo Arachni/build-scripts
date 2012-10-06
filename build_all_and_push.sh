@@ -18,8 +18,6 @@ for lib in $(ls `dirname $0`/lib/*.sh); do source $lib; done
 
 root="$(dirname "$(readlink_f "${0}")")"
 
-package_patterns="arachni*.gz"
-
 output_log_32bit="$root/32bit.log"
 output_log_64bit="$root/64bit.log"
 
@@ -41,7 +39,7 @@ if ls *.pid > /dev/null 2>&1; then
     exit 1
 fi
 
-rm -f $package_patterns
+rm -f $(package_patterns)
 
 rm -f $output_log_32bit
 rm -f $output_log_64bit
@@ -108,7 +106,7 @@ echo
 
 echo 'Pushing to server, this can also take a while...'
 rsync --human-readable --progress --executability --compress --stats \
-    $package_patterns `rsync_destination`
+    $(package_patterns) `rsync_destination`
 
 echo
 echo 'All done.'
