@@ -85,19 +85,3 @@ will continue from the point it left off.
 * ```ARACHNI_BUILD_BRANCH```
 
 Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
-
-### build_all_and_push.sh
-
-**Honors**:
-
-* ```ARACHNI_BUILD_DIR```
-* ```ARACHNI_RSYNC_DEST```
-
-This script:
-
-* Changes directory to ```ARACHNI_BUILD_DIR```.
-* Drives ```build_and_package.sh```, ```cross_build_and_package.sh``` and executes
-    the commands in the ```ARACHNI_OSX_BUILD_AND_PACKAGE``` env variable in order
-    to build all package types -- except for MS Windows, these must be done somewhat manually.
-* Uploads the resulting packages (using ```rsync```) to the destination specified
-    in the ```ARACHNI_RSYNC_DEST``` env variable.
