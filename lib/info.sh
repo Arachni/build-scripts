@@ -30,7 +30,7 @@ rsync_destination(){
 }
 
 package_patterns(){
-    echo $ARACHNI_PACKAGE_PATTERNS
+    echo "$ARACHNI_PACKAGE_PATTERNS"
 }
 
 # Working dir for the build and packaging proces -- used by build_all_and_push.sh
