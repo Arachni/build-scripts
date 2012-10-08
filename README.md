@@ -21,7 +21,7 @@ the build scripts.
 **Honors**:
 
 * ```ARACHNI_BUILD_DIR``` -- Name of the directory to use for the build process (defaults to ```arachni-build-dir```).
-* Options of the corresponding action script (defaults to ```build``` which runs ```build.sh```)
+* Options of the corresponding action script (defaults to ```build``` which runs [build.sh](#buildsh))
 
 This script will:
 
