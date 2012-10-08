@@ -25,9 +25,9 @@ the build scripts.
 
 This script will:
 
-* Change to the ```ARACHNI_BUILD_DIR``` directory (and create it if it doesn't already exist).
+* Change to the ```ARACHNI_BUILD_DIR``` directory (it will create it if it doesn't already exist).
 * Download this repository.
-* Execute the script that corresponds to the specified action (defaults to ```build``` which runs ```build.sh```)
+* Execute the script that corresponds to the specified action (defaults to ```build``` which runs [build.sh](#buildsh))
  
 To get a fresh, self-contained Arachni environment simply run:
 ```wget -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash```
@@ -85,3 +85,4 @@ will continue from the point it left off.
 * ```ARACHNI_BUILD_BRANCH```
 
 Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
+git co
