@@ -85,4 +85,3 @@ will continue from the point it left off.
 * ```ARACHNI_BUILD_BRANCH```
 
 Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
-git co
