@@ -84,4 +84,5 @@ will continue from the point it left off.
 
 * ```ARACHNI_BUILD_BRANCH```
 
-Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```.
+Drives ```build.sh``` and generates an archive named ```arachni-<version>-<os>-<arch>.tar.gz```
+along with the appropriate SHA1 hash files named ```arachni-<version>-<os>-<arch>.tar.gz.sha1```.

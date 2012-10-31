@@ -66,6 +66,7 @@ deps="
     expr
     perl
     tar
+    sha1sum
 "
 for dep in $deps; do
     echo -n "  * $dep"
