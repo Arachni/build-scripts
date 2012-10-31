@@ -23,7 +23,7 @@ source `dirname $0`"/lib/info.sh"
 
 export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
 
-export ARACHNI_PACKAGE_PATTERNS="arachni-*.gz arachni-*.gz.sha1"
+export ARACHNI_PACKAGE_PATTERNS="{arachni-*.gz,arachni-*.gz.sha1}"
 
 #
 # Options and their defaults -- Set as desired
