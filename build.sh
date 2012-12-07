@@ -567,7 +567,11 @@ rm -rf "$root/logs"
 
 echo "  * Removing sources"
 rm -rf $src_path
-rm -rf $root/usr/include/*
+
+if [[ environment == 'development' ]]; then
+    echo "  * Removing development headers"
+    rm -rf $root/usr/include/*
+fi
 
 echo "  * Removing downloaded archives"
 rm -rf $archives_path

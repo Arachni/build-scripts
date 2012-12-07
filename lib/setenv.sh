@@ -21,8 +21,6 @@ source `dirname $0`"/lib/info.sh"
 # Fixed values
 #
 
-export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
-
 export ARACHNI_PACKAGE_PATTERNS="arachni-*.gz*"
 
 #
@@ -39,6 +37,14 @@ export ARACHNI_PACKAGE_PATTERNS="arachni-*.gz*"
 if [ -z "$ARACHNI_BUILD_BRANCH" ]; then
     export ARACHNI_BUILD_BRANCH="experimental"
     echo "---- No branch/tag specified, defaulting to: $ARACHNI_BUILD_BRANCH"
+    echo
+fi
+
+export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
+
+if [ -z "$ARACHNI_BUILD_ENV" ]; then
+    export ARACHNI_BUILD_ENV="production"
+    echo "---- No build environment specified, defaulting to: $ARACHNI_BUILD_ENV"
     echo
 fi
 

@@ -38,6 +38,10 @@ build_dir(){
     echo $ARACHNI_BUILD_DIR
 }
 
+environment(){
+    echo $ARACHNI_BUILD_ENV
+}
+
 # Version of Arachni to be built.
 version(){
     if [ -z "$ARACHNI_BUILD_VERSION" ]; then
