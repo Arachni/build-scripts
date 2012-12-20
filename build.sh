@@ -95,12 +95,12 @@ arachni_tarball_url=`tarball_url`
 libs=(
     http://zlib.net/zlib-1.2.7.tar.gz
     http://www.openssl.org/source/openssl-1.0.1c.tar.gz
-    http://www.sqlite.org/sqlite-autoconf-3071300.tar.gz
+    http://www.sqlite.org/sqlite-autoconf-3071501.tar.gz
     ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
-    ftp://xmlsoft.org/libxslt/libxslt-1.1.26.tar.gz
-    http://curl.haxx.se/download/curl-7.26.0.tar.gz
+    ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
+    http://curl.haxx.se/download/curl-7.28.1.tar.gz
     https://rvm.io/src/yaml-0.1.4.tar.gz
-    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.gz
+    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p327.tar.gz
 )
 
 #
