@@ -45,7 +45,7 @@ environment(){
 # Version of Arachni to be built.
 version(){
     if [ -z "$ARACHNI_BUILD_VERSION" ]; then
-        export ARACHNI_BUILD_VERSION=`wget -q -O - https://raw.github.com/Arachni/arachni/$(branch)/lib/version`
+        export ARACHNI_BUILD_VERSION=`wget --no-check-certificate -q -O - https://raw.github.com/Arachni/arachni/$(branch)/lib/version`
         if [[ $? != 0 ]]; then
             echo "Could not determine the version number of '`branch`'."
             exit 1
