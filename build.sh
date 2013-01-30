@@ -465,7 +465,7 @@ prepare_ruby() {
 
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/ruby_rubygems" 1>> "$logs_path/ruby_rubygems"
-    handle_failure "ruby"
+    handle_failure "ruby_rubygems"
 
     echo "  * Installing sys-proctable"
     download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
