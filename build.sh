@@ -432,7 +432,7 @@ get_ruby_environment() {
 
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
-    export PATH; PATH="\$env_root/usr/bin:\$PATH"
+    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$PATH"
     export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib:\$LD_LIBRARY_PATH"
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
@@ -443,6 +443,9 @@ export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
 export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/1.9.1$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
+
+# Prompt for the Arachni shell (arachni_shell) script.
+export PS1="arachni-shell\$ "
 
 # Arachni packages run the system in production.
 export RAILS_ENV=production
@@ -480,11 +483,15 @@ get_wrapper_template() {
 }
 
 get_server_script() {
-    get_wrapper_environment '$env_root/gems/bin/rackup $env_root/arachni-ui-web/config.ru  "$@"'
+    get_wrapper_environment '$GEM_PATH/bin/rackup $env_root/arachni-ui-web/config.ru  "$@"'
+}
+
+get_rake_script() {
+    get_wrapper_environment '$GEM_PATH/bin/rake -f $env_root/arachni-ui-web/Rakefile "$@"'
 }
 
 get_shell_script() {
-    get_wrapper_environment '; export PATH="$env_root/bin:$PATH"; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
+    get_wrapper_environment 'bash --noprofile --norc "$@"'
 }
 
 get_test_script() {
@@ -495,9 +502,9 @@ get_test_script() {
 # Sets the environment, updates rubygems and installs vital gems
 #
 prepare_ruby() {
-    echo "  * Generating environment configuration ($root/environment)"
-
     export env_root=$system_path
+
+    echo "  * Generating environment configuration ($env_root/environment)"
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
@@ -571,6 +578,10 @@ install_bin_wrappers() {
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
     echo "  * $root/bin/arachni_web"
+
+    get_rake_script > "$root/bin/arachni_web_task"
+    chmod +x "$root/bin/arachni_web_task"
+    echo "  * $root/bin/arachni_web_task"
 
     get_shell_script > "$root/bin/arachni_shell"
     chmod +x "$root/bin/arachni_shell"
