@@ -41,6 +41,10 @@ fi
 
 export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni-ui-web/archive/$ARACHNI_BUILD_BRANCH.tar.gz"
 
+#
+# If set to 'development' headers and other dev dependencies will not be
+# removed from the resulting package.
+#
 if [ -z "$ARACHNI_BUILD_ENV" ]; then
     export ARACHNI_BUILD_ENV="production"
     echo "---- No build environment specified, defaulting to: $ARACHNI_BUILD_ENV"
