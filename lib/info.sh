@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2012 Tasos Laskos <tasos.laskos@gmail.com>
+# Copyright 2010-2013 Tasos Laskos <tasos.laskos@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,26 +33,13 @@ package_patterns(){
     echo "$ARACHNI_PACKAGE_PATTERNS"
 }
 
-# Working dir for the build and packaging proces -- used by build_all_and_push.sh
+# Working dir for the build and packaging process -- used by build_all_and_push.sh
 build_dir(){
     echo $ARACHNI_BUILD_DIR
 }
 
 environment(){
     echo $ARACHNI_BUILD_ENV
-}
-
-# Version of Arachni to be built.
-version(){
-    if [ -z "$ARACHNI_BUILD_VERSION" ]; then
-        export ARACHNI_BUILD_VERSION=`wget --no-check-certificate -q -O - https://raw.github.com/Arachni/arachni/$(branch)/lib/version`
-        if [[ $? != 0 ]]; then
-            echo "Could not determine the version number of '`branch`'."
-            exit 1
-        fi
-    fi
-
-    echo $ARACHNI_BUILD_VERSION
 }
 
 # OS name of host.

@@ -2,6 +2,9 @@
 
 This repository holds scripts which are used to build self-contained packages for Arachni.
 
+The scripts pull-in the [arachni-ui-web](https://github.com/Arachni/arachni-ui-web)
+repository which in turn pulls in the Arachni Framework as a dependency.
+
 ## Options
 
 See ```lib/setenv.sh``` for available options.

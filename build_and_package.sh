@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2012 Tasos Laskos <tasos.laskos@gmail.com>
+# Copyright 2010-2013 Tasos Laskos <tasos.laskos@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ source `dirname $0`/lib/setenv.sh
 
 root="$(dirname "$(readlink_f "${0}")")"
 
-echo "---- Building version: `version`"
-
-pkg_name="arachni-`version`"
-archive="$pkg_name-`operating_system`-`architecture`.tar.gz"
+pkg_name="arachni-$(date +"%Y%m%d%H%M")"
 
 cat<<EOF
 
@@ -71,6 +68,12 @@ fi
 
 echo
 
+pkg_name_with_full_version="arachni-`cat $pkg_name/VERSION`"
+rm -rf $pkg_name_with_full_version
+mv $pkg_name $pkg_name_with_full_version
+pkg_name=$pkg_name_with_full_version
+
+archive="$pkg_name-`operating_system`-`architecture`.tar.gz"
 
 echo "  * Compressing build dir ($pkg_name)"
 tar czf $archive -C `dirname $(readlink_f $pkg_name )` $pkg_name

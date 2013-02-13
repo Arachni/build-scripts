@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2012 Tasos Laskos <tasos.laskos@gmail.com>
+# Copyright 2010-2013 Tasos Laskos <tasos.laskos@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ export ARACHNI_PACKAGE_PATTERNS="arachni-*.gz*"
 #
 # Branch (or tag) to build.
 #
-# Supported versions are v0.4.1 and later.
 #
 # Used universally.
 #
@@ -40,7 +39,7 @@ if [ -z "$ARACHNI_BUILD_BRANCH" ]; then
     echo
 fi
 
-export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni/tarball/$ARACHNI_BUILD_BRANCH"
+export ARACHNI_TARBALL_URL="https://github.com/Arachni/arachni-ui-web/archive/$ARACHNI_BUILD_BRANCH.tar.gz"
 
 if [ -z "$ARACHNI_BUILD_ENV" ]; then
     export ARACHNI_BUILD_ENV="production"
@@ -54,7 +53,7 @@ fi
 # Used by build_all_and_push.sh
 #
 if [ -z "$ARACHNI_RSYNC_DEST" ]; then
-    export ARACHNI_RSYNC_DEST="segfault@downloads.arachni-scanner.com:www/arachni/downloads/nightlies/"
+    export ARACHNI_RSYNC_DEST="user@host:dir"
 fi
 
 #

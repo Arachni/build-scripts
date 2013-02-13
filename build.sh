@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2012 Tasos Laskos <tasos.laskos@gmail.com>
+# Copyright 2010-2013 Tasos Laskos <tasos.laskos@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ deps="
     expr
     perl
     tar
+    git
 "
 for dep in $deps; do
     echo -n "  * $dep"
@@ -83,14 +84,12 @@ if [[ $fail ]]; then
 fi
 
 echo
-
-
 echo "---- Building branch/tag: `branch`"
 
 arachni_tarball_url=`tarball_url`
 
 #
-# All system library dependencies in proper order
+# All system library dependencies in proper installation order.
 #
 libs=(
     http://zlib.net/zlib-1.2.7.tar.gz
@@ -104,10 +103,10 @@ libs=(
 )
 
 #
-# The script will look for the existent of files whose name begins with the following
-# strings to see if a lib has already been installed.
+# The script will look for the existence of files whose name begins with the
+# following strings to see if a lib has already been installed.
 #
-# They should correspond with the entries in the 'libs' array.
+# Their order should correspond to the entries in the 'libs' array.
 #
 libs_so=(
     libz
@@ -142,30 +141,35 @@ fi
 
 update_clean_dir=false
 
-# *BSD's readlink doesn't like non-existent dirs
-root=`readlink_f $root`
-
+# Directory of this script.
 scriptdir=`readlink_f $0`
 
-# holds tarball archives
-archives_path="$root/archives"
+# Root or the package.
+root=`readlink_f $root`
 
-# holds exracted archives
-src_path="$root/src"
+# Holds a base system dir layout where the dependencies will be installed.
+system_path="$root/system"
 
-# holds STDERR and STDOUT
-logs_path="$root/logs"
+# Build directories holding downloaded archives, sources, build logs, etc.
+build_path="$root/build"
+
+# Holds tarball archives.
+archives_path="$build_path/archives"
+
+# Holds extracted source archives.
+src_path="$build_path/src"
+
+# Keeps logs of STDERR and STDOUT for the build/install operations.
+logs_path="$build_path/logs"
 
 # --prefix value for 'configure' scripts
-configure_prefix="$root/usr"
+configure_prefix="$system_path/usr"
 usr_path=$configure_prefix
 
-# PATH for our Ruby environment
-bin_path="$root_path/bin:$usr_path/bin"
-
 # Gem storage directories
-gem_home="$root/gems"
+gem_home="$system_path/gems"
 gem_path=$gem_home
+
 
 #
 # Special config for packages that need something extra.
@@ -173,6 +177,7 @@ gem_path=$gem_home
 #
 # For some reason assoc arrays don't work...
 #
+
 configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
 
 configure_libxml="./configure --with-liiconv-prefix=$configure_prefix"
@@ -186,8 +191,8 @@ configure_ruby="./configure --with-opt-dir=$configure_prefix \
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
 
-# openssl uses uname to determine os/arch which will return the truth
-# even when running in chroot, which is annoying when trying to cross-compile
+# OpenSSL uses uname to determine os/arch which will return the truth
+# even when running in chroot, which is annoying when trying to cross-compile.
 if [[ -e "/32bit-chroot" ]]; then
     configure_openssl="./Configure $common_configure_openssl \
 --prefix=$configure_prefix linux-generic32"
@@ -224,26 +229,26 @@ configure_curl="./configure \
 orig_path=$PATH
 
 #
-# Creates the directory structure for the env
+# Creates the directory structure for the self-contained package.
 #
 setup_dirs( ) {
     cd $root
 
     dirs="
-        logs
-        archives
-        bin
-        gems
-        src
-        usr/bin
-        usr/include
-        usr/info
-        usr/lib
-        usr/man
+        $build_path/logs
+        $build_path/archives
+        $build_path/src
+        $root/bin
+        $system_path/gems
+        $system_path/usr/bin
+        $system_path/usr/include
+        $system_path/usr/info
+        $system_path/usr/lib
+        $system_path/usr/man
     "
     for dir in $dirs
     do
-        echo -n "  * $root/$dir"
+        echo -n "  * $dir"
         if [[ ! -s $dir ]]; then
             echo
             mkdir -p $dir
@@ -256,7 +261,9 @@ setup_dirs( ) {
 }
 
 #
-# Checks the last return value and exits with an error msg on failure
+# Checks the last return value and exits with an error message on failure.
+#
+# To be called after each step.
 #
 handle_failure(){
     rc=$?
@@ -267,8 +274,10 @@ handle_failure(){
     fi
 }
 
+#
+# Downloads the given URL and displays an auto-refreshable progress %.
+#
 download() {
-
     echo -n "  * Downloading $1"
     echo -n " -  0% ETA:      -s"
     wget -c --progress=dot --no-check-certificate $1 $2 2>&1 | \
@@ -281,7 +290,9 @@ download() {
 }
 
 #
-# Downloads an archive (by url) and places it under $archives_path
+# Downloads an archive (by URL) and places it under $archives_path.
+#
+# Calls handle_failure afterwards.
 #
 download_archive() {
     cd $archives_path
@@ -293,16 +304,22 @@ download_archive() {
 }
 
 #
-# Extracts an archive (by name) under $src_path
+# Extracts an archive (by name) under $src_path.
 #
 extract_archive() {
+    if [ -z "$2" ]; then
+        dir=$src_path
+    else
+        dir=$2
+    fi
+
     echo "  * Extracting"
-    tar xvf $archives_path/$1-*.tar.gz -C $src_path 2>> $logs_path/$1 1>> $logs_path/$1
+    tar xvf $archives_path/$1*.tar.gz -C $dir 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 }
 
 #
-# Installs a package from src by name
+# Installs an extracted archive which is in $src_path, by name.
 #
 install_from_src() {
     cd $src_path/$1-*
@@ -336,12 +353,15 @@ install_from_src() {
     cd - > /dev/null
 }
 
+#
+# Gets the name of the given file/directory/URL.
+#
 get_name(){
     basename $1 | awk -F- '{print $1}'
 }
 
 #
-# Downloads and install a package by URL
+# Downloads and install a package by URL.
 #
 download_and_install() {
     name=`get_name $1`
@@ -353,7 +373,7 @@ download_and_install() {
 }
 
 #
-# Downloads and installs all $libs
+# Downloads and installs all $libs.
 #
 install_libs() {
     libtotal=${#libs[@]}
@@ -378,16 +398,15 @@ install_libs() {
             download_and_install $lib
         fi
     done
+
 }
 
 #
-# Returns Bash environmental variable configuration as a string
-#
-# This should be used by our Ruby env.
+# Returns Bash environment configuration.
 #
 get_ruby_environment() {
 
-    cd "$env_root/usr/lib/ruby/1.9.1/"
+    cd "$usr_path/lib/ruby/1.9.1/"
     arch_dir=$(echo x86_64*)
     if [[ -d "$arch_dir" ]]; then
         platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
@@ -399,6 +418,18 @@ get_ruby_environment() {
     fi
 
     cat<<EOF
+#
+# Environment configuration.
+#
+# Makes bundled dependencies available before running anything Arachni related.
+#
+# *DO NOT EDIT* unless you really, really know what you're doing.
+#
+
+#
+# \$env_root is set by the caller.
+#
+
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/usr/bin:\$PATH"
@@ -412,6 +443,9 @@ export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
 export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/1.9.1$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
+
+# Arachni packages run the system in production.
+export RAILS_ENV=production
 
 EOF
 }
@@ -429,7 +463,7 @@ source "\$(dirname \$0)/readlink_f.sh"
 #
 # Slight RVM rip-off
 #
-env_root="\$(dirname "\$(readlink_f "\${0}")")"/..
+env_root="\$(dirname "\$(readlink_f "\${0}")")"/../system
 if [[ -s "\$env_root/environment" ]]; then
     source "\$env_root/environment"
     exec $1
@@ -445,8 +479,12 @@ get_wrapper_template() {
     get_wrapper_environment "ruby $1 \"\$@\""
 }
 
+get_server_script() {
+    get_wrapper_environment '$env_root/gems/bin/rackup $env_root/arachni-ui-web/config.ru  "$@"'
+}
+
 get_shell_script() {
-    get_wrapper_environment '; export PATH="$env_root/bin:$PATH"; export PS1="arachni-shell\$ "; bash --noprofile --norc'
+    get_wrapper_environment '; export PATH="$env_root/bin:$PATH"; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
 }
 
 get_test_script() {
@@ -459,13 +497,13 @@ get_test_script() {
 prepare_ruby() {
     echo "  * Generating environment configuration ($root/environment)"
 
-    export env_root=$root
-    get_ruby_environment > $root/environment
-    source $root/environment
+    export env_root=$system_path
+    get_ruby_environment > $env_root/environment
+    source $env_root/environment
 
     echo "  * Updating Rubygems"
-    $usr_path/bin/gem update --system 2>> "$logs_path/ruby_rubygems" 1>> "$logs_path/ruby_rubygems"
-    handle_failure "ruby_rubygems"
+    $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
+    handle_failure "rubygems"
 
     echo "  * Installing sys-proctable"
     download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
@@ -473,43 +511,66 @@ prepare_ruby() {
 
     cd $src_path/*-sys-proctable*
 
-    $usr_path/bin/rake install --trace 2>> "$logs_path/ruby_sys-proctable" 1>> "$logs_path/ruby_sys-proctable"
-    handle_failure "ruby_sys-proctable"
-    $usr_path/bin/gem build sys-proctable.gemspec 2>> "$logs_path/ruby_sys-proctable" 1>> "$logs_path/ruby_sys-proctable"
-    handle_failure "ruby_sys-proctable"
-    $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/ruby_sys-proctable" 1>> "$logs_path/ruby_sys-proctable"
-    handle_failure "ruby_sys-proctable"
+    $usr_path/bin/rake install --trace 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
+    handle_failure "sys-proctable"
+    $usr_path/bin/gem build sys-proctable.gemspec 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
+    handle_failure "sys-proctable"
+    $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
+    handle_failure "sys-proctable"
 
     echo "  * Installing Bundler"
-    $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/ruby_bundler" 1>> "$logs_path/ruby_bundler"
-    handle_failure "ruby_bundler"
+    $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
+    handle_failure "bundler"
 }
 
+#
+# Installs the Arachni Web User Interface which in turn pulls in the Framework
+# as a dependency, that way we kill two birds with one package.
+#
 install_arachni() {
 
-    rm "$archives_path/arachni-pkg.tar.gz" &> /dev/null
-    download $arachni_tarball_url "-O $archives_path/arachni-pkg.tar.gz"
-    handle_failure "arachni"
+    # The Arachni Web interface archive needs to be stored under $system_path
+    # because it needs to be preserved, it is our app after all.
+    rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
+    download $arachni_tarball_url "-O $archives_path/arachni-ui-web.tar.gz"
+    handle_failure "arachni-ui-web"
+    extract_archive "arachni-ui-web" $system_path
 
-    extract_archive "arachni"
-
-    cd $src_path/Arachni-arachni*
-
-    echo "  * Preparing the bundle"
-    $gem_path/bin/bundle install 2>> "$logs_path/arachni" 1>> "$logs_path/arachni"
-    handle_failure "arachni"
-
-#    echo "  * Testing -- This will take some time ('tail -f $logs_path/arachni' for progress)."
-#    $gem_path/bin/bundle exec $usr_path/bin/rake spec:core 2>> "$logs_path/arachni" 1>> "$logs_path/arachni"
-#    handle_failure "arachni"
+    # GitHub may append the git ref or branch to the folder name, strip it.
+    mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
+    cd $system_path/arachni-ui-web
 
     echo "  * Installing"
-    $usr_path/bin/rake install --trace 2>> "$logs_path/arachni" 1>> "$logs_path/arachni"
-    handle_failure "arachni"
+
+    # Install the Rails bundle *with* binstubs because we'll need to symlink
+    # them from the package executables under $root/bin/.
+    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    handle_failure "arachni-ui-web"
+
+    echo "  * Precompiling assets"
+    $gem_path/bin/rake assets:precompile 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    handle_failure "arachni-ui-web"
+
+    echo "  * Setting-up the database"
+    $gem_path/bin/rake db:migrate 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    handle_failure "arachni-ui-web"
+    $gem_path/bin/rake db:setup 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    handle_failure "arachni-ui-web"
+
+    echo "  * Writing full version to VERSION file"
+
+    # Needed by build_and_package.sh to figure out the release version and it's
+    # nice to have anyways.
+    $gem_path/bin/rake version:full > "$root/VERSION"
+    handle_failure "arachni-ui-web"
 }
 
 install_bin_wrappers() {
     cp "`dirname $(readlink_f $scriptdir)`/lib/readlink_f.sh" "$root/bin/"
+
+    get_server_script > "$root/bin/arachni_web"
+    chmod +x "$root/bin/arachni_web"
+    echo "  * $root/bin/arachni_web"
 
     get_shell_script > "$root/bin/arachni_shell"
     chmod +x "$root/bin/arachni_shell"
@@ -519,10 +580,10 @@ install_bin_wrappers() {
     chmod +x "$root/bin/arachni_test"
     echo "  * $root/bin/arachni_test"
 
-    cd $root/gems/bin
+    cd $env_root/arachni-ui-web/bin
     for bin in arachni*; do
-        echo "  * $root/bin/$bin => $root/gems/bin/$bin"
-        get_wrapper_template "\$env_root/gems/bin/$bin" > "$root/bin/$bin"
+        echo "  * $root/bin/$bin => $env_root/arachni-ui-web/bin/$bin"
+        get_wrapper_template "\$env_root/arachni-ui-web/bin/$bin" > "$root/bin/$bin"
         chmod +x "$root/bin/$bin"
     done
     cd - > /dev/null
@@ -539,9 +600,9 @@ echo '-----------------------------------'
 install_libs
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
-    mkdir -p $clean_build
+    mkdir -p $clean_build/system/
     echo "==== Backing up clean build directory ($clean_build)."
-    cp -R $usr_path $clean_build/
+    cp -R $usr_path $clean_build/system/
 fi
 
 echo
@@ -562,35 +623,29 @@ install_bin_wrappers
 echo
 echo '# Cleaning up'
 echo '----------------'
-echo "  * Removing logs"
-rm -rf "$root/logs"
-
-echo "  * Removing sources"
-rm -rf $src_path
+echo "  * Removing build resources"
+rm -rf $build_path
 
 if [[ environment == 'development' ]]; then
     echo "  * Removing development headers"
-    rm -rf $root/usr/include/*
+    rm -rf $usr_path/include/*
 fi
 
-echo "  * Removing downloaded archives"
-rm -rf $archives_path
-
 echo "  * Removing docs"
-rm -rf $root/usr/share/*
-rm -rf $root/gems/doc/*
+rm -rf $usr_path/share/*
+rm -rf $gem_path/doc/*
 
-echo "  * Removing gem cache"
-rm -rf $root/gems/cache/*
+echo "  * Clearing GEM cache"
+rm -rf $gem_path/cache/*
 
 cp `dirname $scriptdir`/templates/README.tpl $root/README
 cp `dirname $scriptdir`/templates/LICENSE.tpl $root/LICENSE
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then
-    find $root/ -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
+    find $env_root/ -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
 else
-    find $root/ -type f -exec sed -i 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
+    find $env_root/ -type f -exec sed -i 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
 fi
 
 echo
@@ -606,7 +661,7 @@ executables from anywhere:
     echo 'export PATH=$root/bin:\$PATH' >> ~/.bash_profile
     source ~/.bash_profile
 
-Useful info:
+Useful resources:
     * Homepage           - http://arachni-scanner.com
     * Blog               - http://arachni-scanner.com/blog
     * Documentation      - http://arachni-scanner.com/wiki

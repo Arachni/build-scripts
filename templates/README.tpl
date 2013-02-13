@@ -12,9 +12,12 @@ Copyright          - 2010-2012 Tasos Laskos
 License            - Apache License v2
 --------------------------------------------------------------------------------
 
-To use Arachni execute the shell scripts under "bin/".
+To use Arachni run the executables under "bin/".
 
-For a quick scan:
+To launch the Web interface:
+    bin/arachni_web
+
+For a quick scan: via the command-line interface:
     bin/arachni http://test.com
 
 To see the available CLI options:
