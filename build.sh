@@ -444,9 +444,6 @@ export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
 export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/1.9.1$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
-# Prompt for the Arachni shell (arachni_shell) script.
-export PS1="arachni-shell\$ "
-
 # Arachni packages run the system in production.
 export RAILS_ENV=production
 
@@ -491,7 +488,7 @@ get_rake_script() {
 }
 
 get_shell_script() {
-    get_wrapper_environment 'bash --noprofile --norc "$@"'
+    get_wrapper_environment '; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
 }
 
 get_test_script() {
