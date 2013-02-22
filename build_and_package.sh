@@ -18,7 +18,7 @@ source `dirname $0`/lib/setenv.sh
 
 root="$(dirname "$(readlink_f "${0}")")"
 
-pkg_name="arachni-$(date +"%Y%m%d%H%M")"
+pkg_name="arachni"
 
 cat<<EOF
 
