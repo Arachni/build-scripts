@@ -17,6 +17,16 @@ To use Arachni run the executables under "bin/".
 To launch the Web interface:
     bin/arachni_web
 
+Default account details:
+
+    Administrator:
+        E-mail address: admin@admin.admin
+        Password:       administrator
+
+    User:
+        E-mail address: user@user.user
+        Password:       regular_user
+
 For a quick scan: via the command-line interface:
     bin/arachni http://test.com
 
