@@ -402,10 +402,21 @@ install_libs() {
 get_ruby_environment() {
 
     cd "$usr_path/lib/ruby/1.9.1/"
-    arch_dir=$(echo `uname -p`*)
-    if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+
+    possible_arch_dir=$(echo `uname -p`*)
+    if [[ -d "$possible_arch_dir" ]]; then
+        arch_type=$possible_arch_dir
     fi
+
+    # The running process could be in 32bit compat mode on a 64bit system but
+    # Ruby will end up being compiled for 64bit nonetheless so we need to check
+    # for that and remedy the situation.
+    possible_arch_dir=$(echo x86_64*)
+    if [[ -d "$possible_arch_dir" ]]; then
+        arch_type=$possible_arch_dir
+    fi
+
+    platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
 
     cat<<EOF
 #
