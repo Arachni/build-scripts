@@ -405,7 +405,7 @@ get_ruby_environment() {
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
-        arch_type=$possible_arch_dir
+        arch_dir=$possible_arch_dir
     fi
 
     # The running process could be in 32bit compat mode on a 64bit system but
@@ -413,10 +413,12 @@ get_ruby_environment() {
     # for that and remedy the situation.
     possible_arch_dir=$(echo x86_64*)
     if [[ -d "$possible_arch_dir" ]]; then
-        arch_type=$possible_arch_dir
+        arch_dir=$possible_arch_dir
     fi
 
-    platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+    if [[ -d "$arch_dir" ]]; then
+        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+    fi
 
     cat<<EOF
 #
