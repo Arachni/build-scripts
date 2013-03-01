@@ -67,6 +67,7 @@ deps="
     perl
     tar
     git
+    python
 "
 for dep in $deps; do
     echo -n "  * $dep"
@@ -191,17 +192,7 @@ configure_ruby="./configure --with-opt-dir=$configure_prefix \
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
 
-is_32bit_chroot=0
-
-# OpenSSL uses uname to determine os/arch which will return the truth
-# even when running in chroot, which is annoying when trying to cross-compile.
-if [[ -e "/32bit-chroot" ]]; then
-    configure_openssl="./Configure $common_configure_openssl \
---prefix=$configure_prefix linux-generic32"
-
-    is_32bit_chroot=1
-
-elif [[ "Darwin" == "$(uname)" ]]; then
+if [[ "Darwin" == "$(uname)" ]]; then
 
     hw_machine=$(sysctl hw.machine | awk -F: '{print $2}' | sed 's/^ //')
     hw_cpu64bit=$(sysctl hw.cpu64bit_capable | awk '{print $2}')
@@ -421,6 +412,11 @@ get_ruby_environment() {
         platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
     fi
 
+    arch_dir=$(echo i686*)
+    if [[ -d "$arch_dir" ]]; then
+        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+    fi
+
     cat<<EOF
 #
 # Environment configuration.
@@ -525,13 +521,6 @@ prepare_ruby() {
     handle_failure "sys-proctable"
     $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
     handle_failure "sys-proctable"
-
-    # Let to its own devices, the 64bit version will be downloaded when in the 32bit chroot
-    if [[ $is_32bit_chroot != 0 ]] ; then
-        echo "  * Installing libv8"
-        $usr_path/bin/gem install libv8 --version 3.11.8.13 --platform x86-linux --no-ri  --no-rdoc  2>> "$logs_path/libv8" 1>> "$logs_path/libv8"
-        handle_failure "libv8"
-    fi
 
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
