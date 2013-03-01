@@ -19,16 +19,4 @@ if [ -z "$ARACHNI_32BIT_SSH" ]; then
     exit 1
 fi
 
-build_dir='arachni-build-dir'
-
-ssh $ARACHNI_32BIT_SSH "rm -rf $build_dir/$(package_patterns)"
-
-echo "export ARACHNI_BUILD_DIR=$build_dir
-        export ARACHNI_BUILD_BRANCH=$(branch)
-        export PATH=/usr/local/bin:\$PATH
-        wget --no-check-certificate -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash -s build_and_package" |
-    ssh $ARACHNI_32BIT_SSH
-
-scp $ARACHNI_32BIT_SSH:"$build_dir/$(package_patterns)" "$(build_dir)/"
-
-ssh $ARACHNI_32BIT_SSH "rm -rf $build_dir/$(package_patterns)"
+bash `dirname $0`/bootstrap_remote.sh $ARACHNI_32BIT_SSH build_and_package
