@@ -402,17 +402,7 @@ install_libs() {
 get_ruby_environment() {
 
     cd "$usr_path/lib/ruby/1.9.1/"
-    arch_dir=$(echo x86_64*)
-    if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
-    fi
-
-    arch_dir=$(echo i386*)
-    if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
-    fi
-
-    arch_dir=$(echo i686*)
+    arch_dir=$(echo `uname -p`*)
     if [[ -d "$arch_dir" ]]; then
         platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
     fi
