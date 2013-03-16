@@ -575,6 +575,14 @@ install_arachni() {
 install_bin_wrappers() {
     cp "`dirname $(readlink_f $scriptdir)`/lib/readlink_f.sh" "$root/bin/"
 
+    get_wrapper_template "\$env_root/arachni-ui-web/script/create_user" > "$root/bin/arachni_web_create_user"
+    chmod +x "$root/bin/arachni_web_create_user"
+    echo "  * $root/bin/arachni_web_create_user"
+
+    get_wrapper_template "\$env_root/arachni-ui-web/script/change_password" > "$root/bin/arachni_web_change_password"
+    chmod +x "$root/bin/arachni_web_change_password"
+    echo "  * $root/bin/arachni_web_change_password"
+
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
     echo "  * $root/bin/arachni_web"
