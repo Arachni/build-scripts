@@ -435,12 +435,12 @@ get_ruby_environment() {
 
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
-    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$PATH"
+    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
     export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib:\$LD_LIBRARY_PATH"
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p374'
+export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p385'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
@@ -449,6 +449,21 @@ export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
 export RAILS_ENV=production
+
+EOF
+}
+
+get_setenv() {
+    cat<<EOF
+#!/usr/bin/env bash
+
+env_root="\$(dirname \${BASH_SOURCE[0]})"
+if [[ -s "\$env_root/environment" ]]; then
+    source "\$env_root/environment"
+else
+    echo "ERROR: Missing environment file: '\$env_root/environment" >&2
+    exit 1
+fi
 
 EOF
 }
@@ -462,17 +477,8 @@ get_wrapper_environment() {
 #!/usr/bin/env bash
 
 source "\$(dirname \$0)/readlink_f.sh"
-
-#
-# Slight RVM rip-off
-#
-env_root="\$(dirname "\$(readlink_f "\${0}")")"/../system
-if [[ -s "\$env_root/environment" ]]; then
-    source "\$env_root/environment"
-    exec $1
-else
-    echo "ERROR: Missing environment file: '\$env_root/environment" >&2
-    exit 1
+source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
+exec $1
 fi
 
 EOF
@@ -574,6 +580,9 @@ install_arachni() {
 
 install_bin_wrappers() {
     cp "`dirname $(readlink_f $scriptdir)`/lib/readlink_f.sh" "$root/bin/"
+
+    get_setenv > "$root/system/setenv"
+    chmod +x "$root/system/setenv"
 
     get_wrapper_template "\$env_root/arachni-ui-web/script/create_user" > "$root/bin/arachni_web_create_user"
     chmod +x "$root/bin/arachni_web_create_user"
