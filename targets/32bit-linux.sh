@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [ -z "$ARACHNI_32BIT_SSH" ]; then
-    echo 'ARACHNI_32BIT_SSH has not been set or is empty.'
+if [ -z "$ARACHNI_32BIT_LINUX_SSH" ]; then
+    echo 'ARACHNI_32BIT_LINUX_SSH has not been set or is empty.'
     exit 1
 fi
 
-bash `dirname $0`/bootstrap_remote.sh $ARACHNI_32BIT_SSH build_and_package
+bash `dirname $0`/bootstrap_remote.sh $ARACHNI_32BIT_LINUX_SSH build_and_package

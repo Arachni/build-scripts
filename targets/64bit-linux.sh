@@ -14,4 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bash `dirname $0`/build_and_package.sh
+if [ -z "$ARACHNI_64BIT_LINUX_SSH" ]; then
+    echo 'ARACHNI_64BIT_LINUX_SSH has not been set or is empty.'
+    exit 1
+fi
+
+bash `dirname $0`/bootstrap_remote.sh $ARACHNI_64BIT_LINUX_SSH build_and_package
