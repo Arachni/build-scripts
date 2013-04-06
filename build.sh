@@ -514,6 +514,9 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
+    $usr_path/bin/gem -r https://rubygems.org/
+    $usr_path/bin/gem -a http://rubygems.org/
+
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
