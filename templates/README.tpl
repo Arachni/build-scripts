@@ -2,13 +2,13 @@
 
 Homepage           - http://arachni-scanner.com
 Blog               - http://arachni-scanner.com/blog
-Documentation      - http://arachni-scanner.com/wiki
+Documentation      - https://github.com/Arachni/arachni/wiki
 Support            - http://support.arachni-scanner.com
 GitHub page        - http://github.com/Arachni/arachni
 Code Documentation - http://rubydoc.info/github/Arachni/arachni
 Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
 Twitter            - http://twitter.com/ArachniScanner
-Copyright          - 2010-2012 Tasos Laskos
+Copyright          - 2010-2013 Tasos Laskos
 License            - Apache License v2
 --------------------------------------------------------------------------------
 
@@ -35,6 +35,10 @@ To see the available CLI options:
 
 For detailed documentation see:
     http://arachni-scanner.com/wiki/User-guide
+
+Troubleshooting
+--------------
+See the included TROUBLESHOOTING file.
 
 Disclaimer
 --------------
