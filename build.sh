@@ -500,10 +500,6 @@ get_shell_script() {
     get_wrapper_environment '; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
 }
 
-get_test_script() {
-    get_wrapper_environment '$GEM_PATH/bin/rspec $(dirname $(dirname `gem which arachni`))'
-}
-
 #
 # Sets the environment, updates rubygems and installs vital gems
 #
@@ -606,10 +602,6 @@ install_bin_wrappers() {
     get_shell_script > "$root/bin/arachni_shell"
     chmod +x "$root/bin/arachni_shell"
     echo "  * $root/bin/arachni_shell"
-
-    get_test_script > "$root/bin/arachni_test"
-    chmod +x "$root/bin/arachni_test"
-    echo "  * $root/bin/arachni_test"
 
     cd $env_root/arachni-ui-web/bin
     for bin in arachni*; do
