@@ -450,6 +450,8 @@ export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 # Arachni packages run the system in production.
 export RAILS_ENV=production
 
+export NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
 EOF
 }
 
