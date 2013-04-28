@@ -665,6 +665,7 @@ rm -rf $gem_path/cache/*
 
 cp `dirname $scriptdir`/templates/README.tpl $root/README
 cp `dirname $scriptdir`/templates/LICENSE.tpl $root/LICENSE
+cp `dirname $scriptdir`/templates/TROUBLESHOOTING.tpl $root/TROUBLESHOOTING
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then
