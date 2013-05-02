@@ -93,7 +93,7 @@ arachni_tarball_url=`tarball_url`
 # All system library dependencies in proper installation order.
 #
 libs=(
-    http://zlib.net/zlib-1.2.7.tar.gz
+    http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1e.tar.gz
     http://www.sqlite.org/sqlite-autoconf-3071501.tar.gz
     ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
