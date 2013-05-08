@@ -83,8 +83,24 @@ echo ' - done.'
 echo
 
 echo 'Pushing to server, this can also take a while...'
-rsync -t --human-readable --progress --executability --compress --stats \
-    $(package_patterns) $(rsync_destination)
+
+MAX_RETRIES=50
+i=0
+ 
+# Set the initial return value to failure
+false
+ 
+while [ $? -ne 0 -a $i -lt $MAX_RETRIES ]; do
+    i=$(($i+1))
+    rsync --partial --delay-updates --human-readable --progress --executability \
+        --compress --stats $(package_patterns) $(rsync_destination)
+
+    sleep 5
+done
+
+if [ $i -eq $MAX_RETRIES ]; then
+    echo "Hit maximum number of retries, giving up."
+fi
 
 echo
 echo 'All done.'
