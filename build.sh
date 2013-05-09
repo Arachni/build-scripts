@@ -100,7 +100,7 @@ libs=(
     ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
     http://curl.haxx.se/download/curl-7.28.1.tar.gz
     https://rvm.io/src/yaml-0.1.4.tar.gz
-    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p385.tar.gz
+    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p392.tar.gz
 )
 
 #
@@ -234,6 +234,8 @@ setup_dirs( ) {
         $build_path/archives
         $build_path/src
         $root/bin
+        $system_path/logs/framework
+        $system_path/logs/webui
         $system_path/gems
         $system_path/usr/bin
         $system_path/usr/include
@@ -440,7 +442,7 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p385'
+export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p392'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
@@ -449,6 +451,9 @@ export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
 export RAILS_ENV=production
+
+export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
+export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
 
 export NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
