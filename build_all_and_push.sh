@@ -93,7 +93,7 @@ false
 while [ $? -ne 0 -a $i -lt $MAX_RETRIES ]; do
     i=$(($i+1))
     rsync --partial --delay-updates --human-readable --progress --executability \
-        --compress --stats $(package_patterns) $(rsync_destination)
+        --compress --stats --timeout=60 $(package_patterns) $(rsync_destination)
 
     sleep 5
 done
