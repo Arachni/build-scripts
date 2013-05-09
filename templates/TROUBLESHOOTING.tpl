@@ -15,9 +15,9 @@ Scan/Instance/Dispatcher
 If you are experiencing problems for a given scan and you'd like to gain more
 information about its operation you can get debugging information by:
 
-* Starting a Dispatcher with the '--reroute-to-logfile' flag.
-* Adding that Dispatcher to the web interface.
-* Perform a scan using that Dispatcher.
+* Starting a Dispatcher with: bin/arachni_rpcd --reroute-to-logfile --debug
+* Adding that Dispatcher to the web interface (default address is 'localhost:7331').
+* Performing a scan using that Dispatcher.
 
 Detailed operational information about the Instances provided by that Dispatcher
 (and their scans) will be available in log-files under 'system/logs/framework/'.
