@@ -92,7 +92,7 @@ false
  
 while [ $? -ne 0 -a $i -lt $MAX_RETRIES ]; do
     i=$(($i+1))
-    rsync -v --archive --partial --delay-updates --human-readable --progress \
+    rsync -v --archive --delay-updates --human-readable --progress \
     --executability --compress --stats --timeout=60 \
     $(package_patterns) $(rsync_destination)
 
