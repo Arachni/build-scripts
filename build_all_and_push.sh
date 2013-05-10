@@ -95,8 +95,6 @@ while [ $? -ne 0 -a $i -lt $MAX_RETRIES ]; do
     rsync -v --archive --delay-updates --human-readable --progress --partial \
         --delay-updates --executability --compress --stats --timeout=60 \
         $(package_patterns) $(rsync_destination)
-
-    sleep 5
 done
 
 if [ $i -eq $MAX_RETRIES ]; then
