@@ -100,6 +100,7 @@ libs=(
     ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
     http://curl.haxx.se/download/curl-7.28.1.tar.gz
     https://rvm.io/src/yaml-0.1.4.tar.gz
+    http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.gz
     http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p392.tar.gz
 )
 
@@ -117,6 +118,7 @@ libs_so=(
     libxslt
     libcurl
     libyaml-0
+    postgresql
     ruby
 )
 
@@ -438,7 +440,7 @@ get_ruby_environment() {
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
-    export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib:\$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib:\$LD_LIBRARY_PATH:/usr/lib:/usr/local/lib"
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
