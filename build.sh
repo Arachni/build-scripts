@@ -181,7 +181,9 @@ gem_path=$gem_home
 # For some reason assoc arrays don't work...
 #
 
-configure_postgresql="./configure --without-readline"
+configure_postgresql="./configure --without-readline \
+--with-includes=$configure_prefix/include \
+--with-libraries=$configure_prefix/lib"
 
 configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
 
