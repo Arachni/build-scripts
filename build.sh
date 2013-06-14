@@ -183,7 +183,8 @@ gem_path=$gem_home
 
 configure_postgresql="./configure --without-readline \
 --with-includes=$configure_prefix/include \
---with-libraries=$configure_prefix/lib"
+--with-libraries=$configure_prefix/lib \
+--bindir=$build_path/tmp"
 
 configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
 
@@ -239,6 +240,7 @@ setup_dirs( ) {
         $build_path/logs
         $build_path/archives
         $build_path/src
+        $build_path/tmp
         $root/bin
         $system_path/logs/framework
         $system_path/logs/webui
@@ -444,7 +446,7 @@ get_ruby_environment() {
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
-    export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib:\$LD_LIBRARY_PATH:/usr/lib:/usr/local/lib"
+    export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib"
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
