@@ -606,6 +606,10 @@ install_bin_wrappers() {
     chmod +x "$root/bin/arachni_web_change_password"
     echo "  * $root/bin/arachni_web_change_password"
 
+    get_wrapper_template "\$env_root/arachni-ui-web/script/import" > "$root/bin/arachni_web_import"
+    chmod +x "$root/bin/arachni_web_import"
+    echo "  * $root/bin/arachni_web_import"
+
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
     echo "  * $root/bin/arachni_web"
