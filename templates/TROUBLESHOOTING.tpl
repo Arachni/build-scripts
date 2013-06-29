@@ -7,7 +7,7 @@ information that could explain whatever unwanted behavior you may be experiencin
 Web Interface
 -------------
 
-Logs about the operation of the web interface can be found under 'system/logs/framework/'.
+Logs about the operation of the web interface can be found under 'system/logs/webui/'.
 
 Scan/Instance/Dispatcher
 ------------------------
