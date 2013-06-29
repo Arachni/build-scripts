@@ -36,6 +36,13 @@ To see the available CLI options:
 For detailed documentation see:
     http://arachni-scanner.com/wiki/User-guide
 
+Upgrading/migrating
+--------------
+
+To migrate your existing data into this new package please see:
+
+    https://github.com/Arachni/arachni-ui-web/wiki/upgrading
+
 Troubleshooting
 --------------
 See the included TROUBLESHOOTING file.
