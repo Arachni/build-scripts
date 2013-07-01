@@ -95,13 +95,13 @@ arachni_tarball_url=`tarball_url`
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1e.tar.gz
-    http://www.sqlite.org/sqlite-autoconf-3071501.tar.gz
+    http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
     ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
     ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
     http://curl.haxx.se/download/curl-7.28.1.tar.gz
     https://rvm.io/src/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.gz
-    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p392.tar.gz
+    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p448.tar.gz
 )
 
 #
@@ -188,7 +188,7 @@ configure_postgresql="./configure --without-readline \
 
 configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
 
-configure_libxml="./configure --with-liiconv-prefix=$configure_prefix"
+configure_libxml2="./configure --without-python"
 
 configure_ruby="./configure --with-opt-dir=$configure_prefix \
 --with-libyaml-dir=$configure_prefix \
@@ -450,7 +450,7 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p392'
+export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p448'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
