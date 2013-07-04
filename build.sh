@@ -225,8 +225,27 @@ fi
 configure_curl="./configure \
 --with-ssl=$usr_path \
 --with-zlib=$usr_path \
---enable-optimize --enable-nonblocking \
---enable-threaded-resolver --enable-crypto-auth --enable-cookies"
+--without-librtmp \
+--enable-optimize \
+--enable-nonblocking \
+--enable-threaded-resolver \
+--enable-crypto-auth \
+--enable-cookies \
+--enable-http \
+--disable-file \
+--disable-ftp \
+--disable-ldap \
+--disable-ldaps \
+--disable-rtsp \
+--disable-dict \
+--disable-telnet \
+--disable-tftp \
+--disable-pop3 \
+--disable-imap \
+--disable-smtp \
+--disable-gopher \
+--disable-rtmp \
+--disable-cookies"
 
 orig_path=$PATH
 
