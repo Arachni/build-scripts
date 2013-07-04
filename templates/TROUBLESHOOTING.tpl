@@ -36,7 +36,7 @@ In order to be able to manage a large number of Scans and/or Dispatchers, you'll
 have to configure the interface to use a PostgreSQL database by following the
 instructions outlined in this Wiki page:
 
-    https://github.com/Arachni/arachni-ui-web/wiki/Database##PostgreSQL
+    https://github.com/Arachni/arachni-ui-web/wiki/Database#PostgreSQL
 
 Outdated GLIBC version on Linux
 -------------------------------
