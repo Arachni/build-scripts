@@ -26,6 +26,18 @@ Detailed operational information about the Instances provided by that Dispatcher
 KNOWN ERRORS
 ------------
 
+Database errors/crashes
+-------------------------
+
+The web interface uses, by default, an SQLite3 database to allow a configuration-free
+out of the box experience, however, this setup is not suitable for larger workloads.
+
+In order to be able to manage a large number of Scans and/or Dispatchers, you'll
+have to configure the interface to use a PostgreSQL database by following the
+instructions outlined in this Wiki page:
+
+    https://github.com/Arachni/arachni-ui-web/wiki/Database##PostgreSQL
+
 Outdated GLIBC version on Linux
 -------------------------------
 
