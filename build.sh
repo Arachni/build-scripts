@@ -547,10 +547,6 @@ prepare_ruby() {
     $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
     $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
 
-    echo "  * Updating Rubygems"
-    $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
-    handle_failure "rubygems"
-
     echo "  * Installing sys-proctable"
     download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
     extract_archive "sys-proctable" &> /dev/null
@@ -563,6 +559,10 @@ prepare_ruby() {
     handle_failure "sys-proctable"
     $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
     handle_failure "sys-proctable"
+
+    echo "  * Updating Rubygems"
+    $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
+    handle_failure "rubygems"
 
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
