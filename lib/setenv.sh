@@ -17,6 +17,11 @@
 source `dirname $0`"/lib/readlink_f.sh"
 source `dirname $0`"/lib/info.sh"
 
+if [ -n "$ARACHNI_PROXY" ]; then
+	export HTTP_PROXY=$ARACHNI_PROXY
+	export http_proxy=$ARACHNI_PROXY
+fi
+
 #
 # Fixed values
 #
