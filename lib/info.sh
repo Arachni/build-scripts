@@ -42,6 +42,10 @@ environment(){
     echo $ARACHNI_BUILD_ENV
 }
 
+proxy(){
+    echo $ARACHNI_PROXY
+}
+
 # OS name of host.
 operating_system(){
     uname -s | awk '{print tolower($0)}'
