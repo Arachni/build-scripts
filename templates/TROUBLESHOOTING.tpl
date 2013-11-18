@@ -48,9 +48,9 @@ If you haven't updated your system for a while you may see the following message
 
 If you do get this error please update your system and try again.
 
-Segmentation fault on OSX
--------------------------
+Segmentation fault on OS X
+--------------------------
 
-The package and the binaries it bundles were built on OSX 10.8 Mountain Lion,
+The package and the binaries it bundles were built on OS X 10.8 Mountain Lion,
 thus, if you experience segmentation faults while trying to run Arachni please
-ensure that you are using the same OSX version -- older versions are not supported.
+ensure that you are using the same or later OS X version.
