@@ -19,6 +19,16 @@ branch(){
     echo $ARACHNI_BUILD_BRANCH
 }
 
+# Arachni Framework Git repository to use.
+# See: https://github.com/Arachni/arachni-ui-web/blob/experimental/Gemfile#L95
+framework_repository_url(){
+    echo $ARACHNI_FRAMEWORK_REPOSITORY_URL
+}
+
+framework_repository_path(){
+    echo $ARACHNI_FRAMEWORK_REPOSITORY_PATH
+}
+
 # URL pointing to a tar archive with the Arachni code to be built.
 tarball_url(){
     echo $ARACHNI_TARBALL_URL

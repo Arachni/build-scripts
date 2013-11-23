@@ -32,6 +32,7 @@ echo "export ARACHNI_BUILD_DIR=$remote_build_dir
 		export HTTP_PROXY=$(proxy)
 		export http_proxy=$(proxy)
         export ARACHNI_BUILD_BRANCH=$(branch)
+        export ARACHNI_FRAMEWORK_REPOSITORY_URL=$(framework_repository_url)
         export PATH=/usr/local/bin:\$PATH
         wget --no-check-certificate -O - https://raw.github.com/Arachni/build-scripts/master/bootstrap.sh | bash -s $2" |
     ssh $host
