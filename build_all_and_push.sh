@@ -33,7 +33,7 @@ if ls *.pid > /dev/null 2>&1; then
     exit 1
 fi
 
-# Make sure the local Git report of the Arachni Framework is up to date.
+# Make sure the local Git repository of the Arachni Framework is up to date.
 if [ -d $(framework_repository_path) ]; then
     echo -n "Updating local Git repo: $(framework_repository_path)"
     cd $(framework_repository_path)
