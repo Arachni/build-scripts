@@ -35,11 +35,10 @@ fi
 
 # Make sure the local Git repository of the Arachni Framework is up to date.
 if [ -d $(framework_repository_path) ]; then
-    echo -n "Updating local Git repo: $(framework_repository_path)"
+    echo "Updating local Git repo: $(framework_repository_path)"
     cd $(framework_repository_path)
-    git pull --all > /dev/null 2>&1;
-    cd - > /dev/null 2>&1;
-    echo " -- Done"
+    git pull --all
+    cd - > /dev/null 2>&1
     echo
 fi
 
