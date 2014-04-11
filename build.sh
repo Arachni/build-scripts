@@ -544,8 +544,8 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
-    $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
-    $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
+#     $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
+#     $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
 
     echo "  * Installing sys-proctable"
     download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
