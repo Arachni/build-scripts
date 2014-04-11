@@ -16,7 +16,7 @@
 
 #
 # Experimental Arachni install script, it's supposed to take care of everything
-# including system library dependencies, Ruby, gem dependencies and Arachni itself.
+# including system  library dependencies, Ruby, gem dependencies and Arachni itself.
 #
 # Credits:
 #     Tasos Laskos <tasos.laskos@gmail.com> -- Original Linux version
@@ -94,14 +94,14 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+    http://www.openssl.org/source/openssl-1.0.1g.tar.gz
     http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
-    ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
-    ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
-    http://curl.haxx.se/download/curl-7.28.1.tar.gz
+    ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz
+    ftp://xmlsoft.org/libxml2/libxslt-1.1.28.tar.gz
+    http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.gz
-    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p448.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.1.tar.gz
 )
 
 #
@@ -469,11 +469,11 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p448'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.1.1'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/1.9.1$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/site_ruby/2.1.0:\$MY_RUBY_HOME/1.9.1$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -544,11 +544,8 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
-    $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
-    $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
-
     echo "  * Installing sys-proctable"
-    download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
+    download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" #&> /dev/null
     extract_archive "sys-proctable" &> /dev/null
 
     cd $src_path/*-sys-proctable*
