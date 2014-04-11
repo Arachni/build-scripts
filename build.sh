@@ -94,7 +94,7 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+    http://www.openssl.org/source/openssl-1.0.1g.tar.gz
     http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
     ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
     ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
