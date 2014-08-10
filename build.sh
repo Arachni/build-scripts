@@ -94,14 +94,12 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    http://www.openssl.org/source/openssl-1.0.1g.tar.gz
-    http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
-    ftp://xmlsoft.org/libxml2/libxml2-2.9.1.tar.gz
-    ftp://xmlsoft.org/libxml2/libxslt-1.1.28.tar.gz
-    http://curl.haxx.se/download/curl-7.35.0.tar.gz
+    http://www.openssl.org/source/openssl-1.0.1i.tar.gz
+    http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
+    http://curl.haxx.se/download/curl-7.37.1.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-    http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.gz
-    http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.1.tar.gz
+    http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz
 )
 
 #
@@ -114,8 +112,6 @@ libs_so=(
     libz
     libssl
     libsqlite3
-    libxml2
-    libxslt
     libcurl
     libyaml-0
     postgresql
@@ -430,7 +426,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/1.9.1/"
+    cd "$usr_path/lib/ruby/2.1.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -446,7 +442,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.1.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.1.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -473,7 +469,7 @@ export RUBY_VERSION; RUBY_VERSION='ruby-2.1.1'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/site_ruby/2.1.0:\$MY_RUBY_HOME/1.9.1$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.1.0:\$MY_RUBY_HOME/2.1.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -481,8 +477,6 @@ export RAILS_ENV=production
 
 export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
 export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
-
-export NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 EOF
 }
@@ -544,19 +538,6 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
-    echo "  * Installing sys-proctable"
-    download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" #&> /dev/null
-    extract_archive "sys-proctable" &> /dev/null
-
-    cd $src_path/*-sys-proctable*
-
-    $usr_path/bin/rake install --trace 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-    $usr_path/bin/gem build sys-proctable.gemspec 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-    $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
@@ -574,13 +555,14 @@ install_arachni() {
 
     # The Arachni Web interface archive needs to be stored under $system_path
     # because it needs to be preserved, it is our app after all.
-    rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
-    download $arachni_tarball_url "-O $archives_path/arachni-ui-web.tar.gz"
-    handle_failure "arachni-ui-web"
-    extract_archive "arachni-ui-web" $system_path
+    # rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
+    # download $arachni_tarball_url "-O $archives_path/arachni-ui-web.tar.gz"
+    # handle_failure "arachni-ui-web"
+    # extract_archive "arachni-ui-web" $system_path
 
-    # GitHub may append the git ref or branch to the folder name, strip it.
-    mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
+    # # GitHub may append the git ref or branch to the folder name, strip it.
+    # mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
+    cp -R /home/zapotek/workspace/arachni-ui-web-v0.5 $system_path/arachni-ui-web
     cd $system_path/arachni-ui-web
 
     echo "  * Installing"
@@ -614,17 +596,16 @@ install_bin_wrappers() {
     get_setenv > "$root/system/setenv"
     chmod +x "$root/system/setenv"
 
-    get_wrapper_template "\$env_root/arachni-ui-web/script/create_user" > "$root/bin/arachni_web_create_user"
-    chmod +x "$root/bin/arachni_web_create_user"
-    echo "  * $root/bin/arachni_web_create_user"
-
-    get_wrapper_template "\$env_root/arachni-ui-web/script/change_password" > "$root/bin/arachni_web_change_password"
-    chmod +x "$root/bin/arachni_web_change_password"
-    echo "  * $root/bin/arachni_web_change_password"
-
-    get_wrapper_template "\$env_root/arachni-ui-web/script/import" > "$root/bin/arachni_web_import"
-    chmod +x "$root/bin/arachni_web_import"
-    echo "  * $root/bin/arachni_web_import"
+    web_executables="
+        create_user
+        change_password
+        import
+    "
+    for executable in $web_executables; do
+        get_wrapper_template "\$env_root/arachni-ui-web/script/$executable" > "$root/bin/arachni_web_$executable"
+        chmod +x "$root/bin/arachni_web_$executable"
+        echo "  * $root/bin/arachni_web_$executable"
+    done
 
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
@@ -730,7 +711,6 @@ Useful resources:
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
     * Copyright          - 2010-2014 Tasos Laskos
-    * License            - Apache License v2
 
 Have fun ;)
 
