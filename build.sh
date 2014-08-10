@@ -548,6 +548,35 @@ prepare_ruby() {
 }
 
 #
+# Downloads and places the PhantomJS 1.9.2 executable in the package.
+#
+install_phantomjs() {
+    base="https://phantomjs.googlecode.com/files/phantomjs-1.9.2"
+    install_location="$usr_path/bin/phantomjs"
+
+    if [[ -e $install_location ]]; then
+        echo "  * Found at $install_location"
+        return
+    fi
+
+    if [[ "$(operating_system)" == "linux" ]]; then
+        arch="$(operating_system)-$(architecture)"
+    elif [[ "$(operating_system)" == "darwin" ]]; then
+        arch="macosx"
+    else
+        echo "  * Could not find suitable package for: $(operating_system)-$(architecture)"
+        return
+    fi
+
+    url="$base-$arch.tar.bz2"
+
+    download $url "-O $archives_path/phantomjs.tar.bz2"
+    tar xvf "$archives_path/phantomjs.tar.bz2" -C $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+
+    cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+}
+
+#
 # Installs the Arachni Web User Interface which in turn pulls in the Framework
 # as a dependency, that way we kill two birds with one package.
 #
@@ -629,14 +658,20 @@ install_bin_wrappers() {
 }
 
 echo
-echo '# (1/5) Creating directories'
+echo '# (1/6) Creating directories'
 echo '---------------------------------'
 setup_dirs
 
 echo
-echo '# (2/5) Installing dependencies'
+echo '# (2/6) Installing dependencies'
 echo '-----------------------------------'
 install_libs
+
+echo
+echo '# (3/6) Installing PhantomJS'
+echo '-----------------------------------'
+install_phantomjs
+echo
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
     mkdir -p $clean_build/system/
@@ -645,17 +680,17 @@ if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
 fi
 
 echo
-echo '# (3/5) Preparing the Ruby environment'
+echo '# (4/6) Preparing the Ruby environment'
 echo '-------------------------------------------'
 prepare_ruby
 
 echo
-echo '# (4/5) Installing Arachni'
+echo '# (5/6) Installing Arachni'
 echo '-------------------------------'
 install_arachni
 
 echo
-echo '# (5/5) Installing bin wrappers'
+echo '# (6/6) Installing bin wrappers'
 echo '------------------------------------'
 install_bin_wrappers
 
