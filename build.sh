@@ -96,7 +96,7 @@ libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
-    http://curl.haxx.se/download/curl-7.37.1.tar.gz
+    http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz
@@ -596,9 +596,14 @@ install_arachni() {
 
     echo "  * Installing"
 
+    # Packages dependencies which is handy if we're in dev mode and have
+    # dependencies loaded from paths.
+    $gem_path/bin/bundle package --all 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+
     # Install the Rails bundle *with* binstubs because we'll need to symlink
     # them from the package executables under $root/bin/.
-    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle install --local --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+
     handle_failure "arachni-ui-web"
 
     echo "  * Precompiling assets"
