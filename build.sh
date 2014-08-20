@@ -591,7 +591,7 @@ install_arachni() {
 
     # # GitHub may append the git ref or branch to the folder name, strip it.
     # mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
-    cp -R /home/zapotek/workspace/arachni-ui-web-v0.5 $system_path/arachni-ui-web
+    cp -R /home/zapotek/workspace/arachni-ui-web $system_path/arachni-ui-web
     cd $system_path/arachni-ui-web
 
     echo "  * Installing"
