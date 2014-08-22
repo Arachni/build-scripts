@@ -100,6 +100,8 @@ libs=(
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz
+    http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
+    http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
 
 #
@@ -116,6 +118,8 @@ libs_so=(
     libyaml-0
     postgresql
     ruby
+    libfreetype
+    libfontconfig
 )
 
 if [[ ! -z "$1" ]]; then
@@ -243,6 +247,10 @@ configure_curl="./configure \
 --disable-rtmp \
 --disable-cookies"
 
+configure_fontconfig="FREETYPE_CFLAGS=\"-I$usr_path/include/freetype2\" \
+FREETYPE_LIBS=\"-L$usr_path/lib -lfreetype -lz\" \
+./configure"
+
 orig_path=$PATH
 
 #
@@ -359,7 +367,7 @@ install_from_src() {
     echo "  * Configuring ($configure)"
     echo "Configuring with: $configure" 2>> $logs_path/$1 1>> $logs_path/$1
 
-    $configure 2>> $logs_path/$1 1>> $logs_path/$1
+    eval $configure 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 
     echo "  * Compiling"
