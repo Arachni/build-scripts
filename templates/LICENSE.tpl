@@ -2,22 +2,24 @@
 
 Copyright 2010-2014 Tasos Laskos <tasos.laskos@gmail.com>
 
-The Arachni Framework is dual-licensed.
+The Arachni Framework and WebUI (henceforth both referred to simply as "Arachni")
+are dual-licensed.
 
-Cases that include **direct commercialization** of Arachni require a commercial,
+Cases that include **commercialization** of Arachni require a commercial,
 non-free license. Otherwise, the system can be used under the terms of the
 Apache License v2.0 license, found at the bottom of this document.
 
-Cases of **direct commercialization** are:
+Cases of **commercialization** are:
 
 * Using Arachni to provide commercial managed/SaaS services.
 * Distributing Arachni as a commercial product or as part of one.
 
-Cases which **don't** require a commercial license include (but are not limited to):
+Cases which **don't** require a commercial license, and thus fall under
+the terms of Apache License v2.0, include (but are not limited to):
 
 * Penetration testers (or penetration testing organizations) using Arachni as
     part of their assessment toolkit.
-    * So long as that doesn't conflict with the **direct commercialization** clause.
+    * So long as that doesn't conflict with the **commercialization** clause.
 * Using Arachni to test your own systems.
 * Any non-commercial use of Arachni.
 
