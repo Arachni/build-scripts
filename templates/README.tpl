@@ -9,7 +9,7 @@ Code Documentation - http://rubydoc.info/github/Arachni/arachni
 Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
 Twitter            - http://twitter.com/ArachniScanner
 Copyright          - 2010-2014 Tasos Laskos
-License            - Apache License v2
+License            - Dual-licensed (Apache License v2.0/Commercial -- see LICENSE file)
 --------------------------------------------------------------------------------
 
 To use Arachni run the executables under "bin/".
@@ -52,3 +52,11 @@ Disclaimer
 Arachni is free software and you are allowed to use it as you see fit.
 However, I can't be held responsible for your actions or for any damage
 caused by the use of this software.
+
+Copying
+--------------
+For the Arachni license please see the LICENSE file.
+
+The bundled PhantomJS (http://phantomjs.org/) executable is distributed
+under the BSD license:
+    https://github.com/ariya/phantomjs/blob/master/LICENSE.BSD

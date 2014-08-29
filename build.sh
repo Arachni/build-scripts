@@ -16,7 +16,7 @@
 
 #
 # Experimental Arachni install script, it's supposed to take care of everything
-# including system library dependencies, Ruby, gem dependencies and Arachni itself.
+# including system  library dependencies, Ruby, gem dependencies and Arachni itself.
 #
 # Credits:
 #     Tasos Laskos <tasos.laskos@gmail.com> -- Original Linux version
@@ -94,14 +94,14 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    http://www.openssl.org/source/openssl-1.0.1g.tar.gz
-    http://www.sqlite.org/2013/sqlite-autoconf-3071700.tar.gz
-    ftp://xmlsoft.org/libxml2/libxml2-2.8.0.tar.gz
-    ftp://xmlsoft.org/libxslt/libxslt-1.1.28.tar.gz
-    http://curl.haxx.se/download/curl-7.28.1.tar.gz
+    http://www.openssl.org/source/openssl-1.0.1i.tar.gz
+    http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
+    http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-    http://ftp.postgresql.org/pub/source/v9.2.4/postgresql-9.2.4.tar.gz
-    http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p448.tar.gz
+    http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz
+    http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
+    http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
 
 #
@@ -114,12 +114,12 @@ libs_so=(
     libz
     libssl
     libsqlite3
-    libxml2
-    libxslt
     libcurl
     libyaml-0
     postgresql
     ruby
+    libfreetype
+    libfontconfig
 )
 
 if [[ ! -z "$1" ]]; then
@@ -247,6 +247,10 @@ configure_curl="./configure \
 --disable-rtmp \
 --disable-cookies"
 
+configure_fontconfig="FREETYPE_CFLAGS=\"-I$usr_path/include/freetype2\" \
+FREETYPE_LIBS=\"-L$usr_path/lib -lfreetype -lz\" \
+./configure"
+
 orig_path=$PATH
 
 #
@@ -363,7 +367,7 @@ install_from_src() {
     echo "  * Configuring ($configure)"
     echo "Configuring with: $configure" 2>> $logs_path/$1 1>> $logs_path/$1
 
-    $configure 2>> $logs_path/$1 1>> $logs_path/$1
+    eval $configure 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 
     echo "  * Compiling"
@@ -430,7 +434,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/1.9.1/"
+    cd "$usr_path/lib/ruby/2.1.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -446,7 +450,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/1.9.1/$arch_dir:\$MY_RUBY_HOME/site_ruby/1.9.1/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.1.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.1.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -469,11 +473,11 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-1.9.3-p448'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.1.1'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/1.9.1:\$MY_RUBY_HOME/1.9.1$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.1.0:\$MY_RUBY_HOME/2.1.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -481,8 +485,6 @@ export RAILS_ENV=production
 
 export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
 export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
-
-export NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 EOF
 }
@@ -544,6 +546,7 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
+<<<<<<< HEAD
 #     $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
 #     $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
 
@@ -560,6 +563,8 @@ prepare_ruby() {
     $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
     handle_failure "sys-proctable"
 
+=======
+>>>>>>> v0.5
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
@@ -567,6 +572,35 @@ prepare_ruby() {
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
     handle_failure "bundler"
+}
+
+#
+# Downloads and places the PhantomJS 1.9.2 executable in the package.
+#
+install_phantomjs() {
+    base="https://phantomjs.googlecode.com/files/phantomjs-1.9.2"
+    install_location="$usr_path/bin/phantomjs"
+
+    if [[ -e $install_location ]]; then
+        echo "  * Found at $install_location"
+        return
+    fi
+
+    if [[ "$(operating_system)" == "linux" ]]; then
+        arch="$(operating_system)-$(architecture)"
+    elif [[ "$(operating_system)" == "darwin" ]]; then
+        arch="macosx"
+    else
+        echo "  * Could not find suitable package for: $(operating_system)-$(architecture)"
+        return
+    fi
+
+    url="$base-$arch.tar.bz2"
+
+    download $url "-O $archives_path/phantomjs.tar.bz2"
+    tar xvf "$archives_path/phantomjs.tar.bz2" -C $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+
+    cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
 }
 
 #
@@ -588,9 +622,14 @@ install_arachni() {
 
     echo "  * Installing"
 
+    # Packages dependencies which is handy if we're in dev mode and have
+    # dependencies loaded from paths.
+    $gem_path/bin/bundle package --all 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+
     # Install the Rails bundle *with* binstubs because we'll need to symlink
     # them from the package executables under $root/bin/.
-    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle install --local --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+
     handle_failure "arachni-ui-web"
 
     echo "  * Precompiling assets"
@@ -617,17 +656,17 @@ install_bin_wrappers() {
     get_setenv > "$root/system/setenv"
     chmod +x "$root/system/setenv"
 
-    get_wrapper_template "\$env_root/arachni-ui-web/script/create_user" > "$root/bin/arachni_web_create_user"
-    chmod +x "$root/bin/arachni_web_create_user"
-    echo "  * $root/bin/arachni_web_create_user"
-
-    get_wrapper_template "\$env_root/arachni-ui-web/script/change_password" > "$root/bin/arachni_web_change_password"
-    chmod +x "$root/bin/arachni_web_change_password"
-    echo "  * $root/bin/arachni_web_change_password"
-
-    get_wrapper_template "\$env_root/arachni-ui-web/script/import" > "$root/bin/arachni_web_import"
-    chmod +x "$root/bin/arachni_web_import"
-    echo "  * $root/bin/arachni_web_import"
+    web_executables="
+        create_user
+        change_password
+        import
+        scan_import
+    "
+    for executable in $web_executables; do
+        get_wrapper_template "\$env_root/arachni-ui-web/script/$executable" > "$root/bin/arachni_web_$executable"
+        chmod +x "$root/bin/arachni_web_$executable"
+        echo "  * $root/bin/arachni_web_$executable"
+    done
 
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
@@ -651,14 +690,20 @@ install_bin_wrappers() {
 }
 
 echo
-echo '# (1/5) Creating directories'
+echo '# (1/6) Creating directories'
 echo '---------------------------------'
 setup_dirs
 
 echo
-echo '# (2/5) Installing dependencies'
+echo '# (2/6) Installing dependencies'
 echo '-----------------------------------'
 install_libs
+
+echo
+echo '# (3/6) Installing PhantomJS'
+echo '-----------------------------------'
+install_phantomjs
+echo
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
     mkdir -p $clean_build/system/
@@ -667,17 +712,17 @@ if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
 fi
 
 echo
-echo '# (3/5) Preparing the Ruby environment'
+echo '# (4/6) Preparing the Ruby environment'
 echo '-------------------------------------------'
 prepare_ruby
 
 echo
-echo '# (4/5) Installing Arachni'
+echo '# (5/6) Installing Arachni'
 echo '-------------------------------'
 install_arachni
 
 echo
-echo '# (5/5) Installing bin wrappers'
+echo '# (6/6) Installing bin wrappers'
 echo '------------------------------------'
 install_bin_wrappers
 
@@ -733,7 +778,6 @@ Useful resources:
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
     * Copyright          - 2010-2014 Tasos Laskos
-    * License            - Apache License v2
 
 Have fun ;)
 
