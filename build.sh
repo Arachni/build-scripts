@@ -546,25 +546,6 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
-<<<<<<< HEAD
-#     $usr_path/bin/gem source -r https://rubygems.org/ > /dev/null
-#     $usr_path/bin/gem source -a http://rubygems.org/ > /dev/null
-
-    echo "  * Installing sys-proctable"
-    download "https://github.com/djberg96/sys-proctable/tarball/master" "-O $archives_path/sys-proctable-pkg.tar.gz" &> /dev/null
-    extract_archive "sys-proctable" &> /dev/null
-
-    cd $src_path/*-sys-proctable*
-
-    $usr_path/bin/rake install --trace 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-    $usr_path/bin/gem build sys-proctable.gemspec 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-    $usr_path/bin/gem install sys-proctable-*.gem 2>> "$logs_path/sys-proctable" 1>> "$logs_path/sys-proctable"
-    handle_failure "sys-proctable"
-
-=======
->>>>>>> v0.5
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
