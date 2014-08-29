@@ -592,14 +592,13 @@ install_arachni() {
 
     # The Arachni Web interface archive needs to be stored under $system_path
     # because it needs to be preserved, it is our app after all.
-    # rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
-    # download $arachni_tarball_url "-O $archives_path/arachni-ui-web.tar.gz"
-    # handle_failure "arachni-ui-web"
-    # extract_archive "arachni-ui-web" $system_path
+    rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
+    download $arachni_tarball_url "-O $archives_path/arachni-ui-web.tar.gz"
+    handle_failure "arachni-ui-web"
+    extract_archive "arachni-ui-web" $system_path
 
-    # # GitHub may append the git ref or branch to the folder name, strip it.
-    # mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
-    cp -R /home/zapotek/workspace/arachni-ui-web $system_path/arachni-ui-web
+    # GitHub may append the git ref or branch to the folder name, strip it.
+    mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
     cd $system_path/arachni-ui-web
 
     echo "  * Installing"
@@ -642,6 +641,7 @@ install_bin_wrappers() {
         create_user
         change_password
         import
+        scan_import
     "
     for executable in $web_executables; do
         get_wrapper_template "\$env_root/arachni-ui-web/script/$executable" > "$root/bin/arachni_web_$executable"
