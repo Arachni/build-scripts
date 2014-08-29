@@ -1,6 +1,6 @@
 # License
 
-Copyright 2010-2014 Tasos Laskos <tasos.laskos@gmail.com>
+Copyright 2010-2014 Tasos Laskos <tasos.laskos@arachni-scanner.com>
 
 The Arachni Framework and WebUI (henceforth both referred to simply as "Arachni")
 are dual-licensed.
