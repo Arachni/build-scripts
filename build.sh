@@ -559,19 +559,29 @@ install_phantomjs() {
 
     if [[ "$(operating_system)" == "linux" ]]; then
         arch="$(operating_system)-$(architecture)"
+        ext="tar.gz"
     elif [[ "$(operating_system)" == "darwin" ]]; then
         arch="macosx"
+        ext="zip"
     else
         echo "  * Could not find suitable package for: $(operating_system)-$(architecture)"
         return
     fi
 
-    url="$base-$arch.tar.bz2"
+    url="$base-$arch.$ext"
 
-    download $url "-O $archives_path/phantomjs.tar.bz2"
-    tar xvf "$archives_path/phantomjs.tar.bz2" -C $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+    download $url "-O $archives_path/phantomjs.$ext"
+
+    if [[ $ext == "zip" ]]; then
+        unzip "$archives_path/phantomjs.$ext" -d $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+    else
+        tar xvf "$archives_path/phantomjs.$ext" -C $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+    fi
+
+    handle_failure "phantomjs"
 
     cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+    handle_failure "phantomjs"
 }
 
 #
