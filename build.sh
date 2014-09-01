@@ -605,11 +605,12 @@ install_arachni() {
 
     # Packages dependencies which is handy if we're in dev mode and have
     # dependencies loaded from paths.
-    $gem_path/bin/bundle package --all 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    #$gem_path/bin/bundle package --all 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
 
     # Install the Rails bundle *with* binstubs because we'll need to symlink
     # them from the package executables under $root/bin/.
-    $gem_path/bin/bundle install --local --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    #$gem_path/bin/bundle install --local --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
 
     handle_failure "arachni-ui-web"
 
