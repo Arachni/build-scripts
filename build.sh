@@ -559,7 +559,7 @@ install_phantomjs() {
 
     if [[ "$(operating_system)" == "linux" ]]; then
         arch="$(operating_system)-$(architecture)"
-        ext="tar.gz"
+        ext="tar.bz2"
     elif [[ "$(operating_system)" == "darwin" ]]; then
         arch="macosx"
         ext="zip"
