@@ -135,7 +135,7 @@ fi
 update_clean_dir=false
 
 # Directory of this script.
-scriptdir=`readlink_f $0`
+scriptdir=`dirname $(readlink_f $0)`
 
 # Root or the package.
 root=`readlink_f $root`
@@ -632,7 +632,7 @@ install_arachni() {
 }
 
 install_bin_wrappers() {
-    cp "`dirname $(readlink_f $scriptdir)`/lib/readlink_f.sh" "$root/bin/"
+    cp "$scriptdir/lib/readlink_f.sh" "$root/bin/"
 
     get_setenv > "$root/system/setenv"
     chmod +x "$root/system/setenv"
@@ -725,9 +725,9 @@ rm -rf $gem_path/doc/*
 echo "  * Clearing GEM cache"
 rm -rf $gem_path/cache/*
 
-cp `dirname $scriptdir`/templates/README.tpl $root/README
-cp `dirname $scriptdir`/templates/LICENSE.tpl $root/LICENSE
-cp `dirname $scriptdir`/templates/TROUBLESHOOTING.tpl $root/TROUBLESHOOTING
+cp "$scriptdir/templates/README.tpl" "$root/README"
+cp "$scriptdir/templates/LICENSE.tpl" "$root/LICENSE"
+cp "$scriptdir/templates/TROUBLESHOOTING.tpl" "$root/TROUBLESHOOTING"
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then
