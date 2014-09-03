@@ -505,7 +505,6 @@ get_wrapper_environment() {
 source "\$(dirname \$0)/readlink_f.sh"
 source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
 exec $1
-fi
 
 EOF
 }
