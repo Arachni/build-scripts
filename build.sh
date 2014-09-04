@@ -610,7 +610,11 @@ install_arachni() {
     # them from the package executables under $root/bin/.
     $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     #$gem_path/bin/bundle install --local --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    handle_failure "arachni-ui-web"
 
+    # If we don't do this Rails 4 will keep printing annoying messages when using the runner
+    # or console.
+    yes | $gem_path/bin/rake rails:update:bin 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     echo "  * Precompiling assets"
