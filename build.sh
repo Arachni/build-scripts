@@ -54,6 +54,7 @@ deps="
     expr
     perl
     tar
+    unzip
     git
     python
 "
