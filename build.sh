@@ -557,17 +557,20 @@ install_phantomjs() {
     fi
 
     if [[ "$(operating_system)" == "linux" ]]; then
-        arch="$(operating_system)-$(architecture)"
+        os="$(operating_system)-$(architecture)"
         ext="tar.bz2"
+    elif [[ "$(operating_system)" == *cygwin_nt* ]]; then
+        os="windows"
+        ext="zip"
     elif [[ "$(operating_system)" == "darwin" ]]; then
-        arch="macosx"
+        os="macosx"
         ext="zip"
     else
         echo "  * Could not find suitable package for: $(operating_system)-$(architecture)"
         return
     fi
 
-    url="$base-$arch.$ext"
+    url="$base-$os.$ext"
 
     download $url "-O $archives_path/phantomjs.$ext"
 
