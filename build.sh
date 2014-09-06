@@ -105,7 +105,7 @@ libs_so=(
     libssl
     libsqlite3
     libcurl
-    libyaml-0
+    libyaml
     postgresql
     ruby
     libexpat
@@ -587,7 +587,7 @@ install_phantomjs() {
         cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
         handle_failure "phantomjs"
     elif [[ "$(operating_system)" == *cygwin_nt* ]]; then
-        cp $src_path/phantomjs-*/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+        cp $src_path/phantomjs-*/phantomjs.exe $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
         handle_failure "phantomjs"
     fi
 }
