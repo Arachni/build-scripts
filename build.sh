@@ -82,8 +82,7 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    # http://www.openssl.org/source/openssl-1.0.1i.tar.gz
-    http://www.openssl.org/source/openssl-1.0.2-beta2.tar.gz
+    http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
     http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
