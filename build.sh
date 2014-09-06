@@ -583,8 +583,13 @@ install_phantomjs() {
 
     handle_failure "phantomjs"
 
-    cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
-    handle_failure "phantomjs"
+    if [[ "$(operating_system)" == "linux" || "$(operating_system)" == "darwin" ]]; then
+        cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+        handle_failure "phantomjs"
+    elif [[ "$(operating_system)" == *cygwin_nt* ]]; then
+        cp $src_path/phantomjs-*/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
+        handle_failure "phantomjs"
+    fi
 }
 
 #
