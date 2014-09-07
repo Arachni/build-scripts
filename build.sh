@@ -523,7 +523,7 @@ get_rake_script() {
 }
 
 get_shell_script() {
-    get_wrapper_environment '; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
+    get_wrapper_environment '; export PS1="\u@\h:\w \033[0;32m\][arachni-shell]\[\033[0m\$ "; bash --noprofile --norc "$@"'
 }
 
 get_rails_runner_script() {
