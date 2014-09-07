@@ -526,6 +526,10 @@ get_shell_script() {
     get_wrapper_environment '; export PS1="arachni-shell\$ "; bash --noprofile --norc "$@"'
 }
 
+get_rails_runner_script() {
+    get_wrapper_environment '$env_root/arachni-ui-web/bin/rails runner "$@"'
+}
+
 #
 # Sets the environment, updates rubygems and installs vital gems
 #
@@ -665,6 +669,10 @@ install_bin_wrappers() {
     get_server_script > "$root/bin/arachni_web"
     chmod +x "$root/bin/arachni_web"
     echo "  * $root/bin/arachni_web"
+
+    get_rails_runner_script > "$root/bin/arachni_web_script"
+    chmod +x "$root/bin/arachni_web_script"
+    echo "  * $root/bin/arachni_web_script"
 
     get_rake_script > "$root/bin/arachni_web_task"
     chmod +x "$root/bin/arachni_web_task"
