@@ -172,6 +172,10 @@ gem_path=$gem_home
 # For some reason assoc arrays don't work...
 #
 
+if [ `getconf LONG_BIT` == "64" ]; then
+    configure_zlib="CFLAGS=\"-m64\" ./configure"
+fi
+
 configure_postgresql="./configure --without-readline \
 --with-includes=$configure_prefix/include \
 --with-libraries=$configure_prefix/lib \
