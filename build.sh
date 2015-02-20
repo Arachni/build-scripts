@@ -87,9 +87,9 @@ libs=(
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
     http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-    http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.gz
-    http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.5.tar.gz
-    http://skylink.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
+    http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.0.tar.gz
+    http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
     http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
@@ -179,7 +179,7 @@ fi
 configure_postgresql="./configure --without-readline \
 --with-includes=$configure_prefix/include \
 --with-libraries=$configure_prefix/lib \
---bindir=$build_path/tmp"
+--bindir=$usr_path/bin"
 
 configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
 
@@ -429,7 +429,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.1.0/"
+    cd "$usr_path/lib/ruby/2.2.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -445,7 +445,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.1.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.1.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.2.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.2.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -458,7 +458,7 @@ get_ruby_environment() {
 #
 
 #
-# \$env_root is set by the caller.
+# $env_root is set by the caller.
 #
 
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
@@ -468,11 +468,11 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.1.5'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.2.0'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.1.0:\$MY_RUBY_HOME/2.1.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.2.0:\$MY_RUBY_HOME/2.2.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -547,6 +547,10 @@ prepare_ruby() {
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
+
+    echo "  * Installing Rake"
+    $usr_path/bin/gem install rake --no-ri  --no-rdoc  2>> "$logs_path/rake" 1>> "$logs_path/rake"
+    handle_failure "rake"
 
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
