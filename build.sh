@@ -88,7 +88,7 @@ libs=(
     http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
-    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.0.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.1.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
     http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
@@ -468,7 +468,7 @@ if [[ \$? -ne 0 ]] ; then
     export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.2.0'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.2.1'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
