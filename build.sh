@@ -84,7 +84,6 @@ libs=(
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
     http://curl.haxx.se/download/curl-7.35.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-    ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.1.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
@@ -104,7 +103,6 @@ libs_so=(
     libsqlite3
     libcurl
     libyaml
-    libffi
     postgresql
     ruby
     libexpat
