@@ -58,6 +58,7 @@ deps="
     git
     python
 "
+
 for dep in $deps; do
     echo -n "  * $dep"
     if [[ ! `which "$dep"` ]]; then
@@ -225,7 +226,6 @@ configure_curl="./configure \
 --enable-nonblocking \
 --enable-threaded-resolver \
 --enable-crypto-auth \
---enable-cookies \
 --enable-http \
 --disable-file \
 --disable-ftp \
@@ -245,8 +245,6 @@ configure_curl="./configure \
 configure_fontconfig="FREETYPE_CFLAGS=\"-I$usr_path/include/freetype2\" \
 FREETYPE_LIBS=\"-L$usr_path/lib -lfreetype -lz\" \
 ./configure --with-expat=$usr_path"
-
-orig_path=$PATH
 
 #
 # Creates the directory structure for the self-contained package.
@@ -464,8 +462,13 @@ get_ruby_environment() {
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
-    export LD_LIBRARY_PATH; LD_LIBRARY_PATH="\$env_root/usr/lib"
-    export DYLD_LIBRARY_PATH; DYLD_LIBRARY_PATH="\$env_root/usr/lib:\$DYLD_LIBRARY_PATH"
+    
+    export C_INCLUDE_PATH="\$env_root/usr/include"
+    export CPLUS_INCLUDE_PATH="\$C_INCLUDE_PATH"
+
+    export LIBRARY_PATH="\$env_root/usr/lib"
+    export LD_LIBRARY_PATH="\$LIBRARY_PATH"
+    export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
 fi
 
 export RUBY_VERSION; RUBY_VERSION='ruby-2.2.1'
