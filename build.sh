@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2014 Tasos Laskos <tasos.laskos@arachni-scanner.com>
-
-#
-# Experimental Arachni install script, it's supposed to take care of everything
-# including system  library dependencies, Ruby, gem dependencies and Arachni itself.
+# Copyright 2010-2015 Tasos Laskos <tasos.laskos@arachni-scanner.com>
 #
 # Credits:
 #     Tasos Laskos <tasos.laskos@gmail.com> -- Original Linux version
@@ -792,7 +788,7 @@ Useful resources:
     * Code Documentation - http://rubydoc.info/github/Arachni/arachni
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
-    * Copyright          - 2010-2014 Tasos Laskos
+    * Copyright          - 2010-2015 Tasos Laskos
 
 Have fun ;)
 
