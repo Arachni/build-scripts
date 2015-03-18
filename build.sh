@@ -82,7 +82,7 @@ libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
-    http://curl.haxx.se/download/curl-7.35.0.tar.gz
+    http://curl.haxx.se/download/curl-7.41.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.1.tar.gz
@@ -217,6 +217,8 @@ fi
 configure_curl="./configure \
 --with-ssl=$usr_path \
 --with-zlib=$usr_path \
+--with-gssapi \
+--with-spnego \
 --without-librtmp \
 --enable-optimize \
 --enable-nonblocking \
