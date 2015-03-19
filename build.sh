@@ -50,6 +50,7 @@ deps="
     expr
     perl
     tar
+    bzip2
     unzip
     git
     python
