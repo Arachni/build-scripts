@@ -84,7 +84,7 @@ libs=(
     http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
     http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
-    http://www.h5l.org/dist/src/heimdal-1.5.2.tar.gz
+    http://www.h5l.org/dist/src/heimdal-1.4.tar.gz
     http://curl.haxx.se/download/curl-7.41.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
@@ -382,7 +382,7 @@ install_from_src() {
     handle_failure $1
 
     echo "  * Compiling"
-    DYLD_LIBRARY_PATH=$usr_path/lib LIBRARY_PATH=$usr_path/lib LD_LIBRARY_PATH=$usr_path/lib make 2>> $logs_path/$1 1>> $logs_path/$1
+    LC_ALL=C LANG=C DYLD_LIBRARY_PATH=$usr_path/lib LIBRARY_PATH=$usr_path/lib LD_LIBRARY_PATH=$usr_path/lib make 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 
     echo "  * Installing"
