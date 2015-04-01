@@ -83,6 +83,8 @@ libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
+    http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+    http://www.h5l.org/dist/src/heimdal-1.5.2.tar.gz
     http://curl.haxx.se/download/curl-7.41.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
@@ -102,6 +104,8 @@ libs_so=(
     libz
     libssl
     libsqlite3
+    libncurses
+    libkrb5
     libcurl
     libyaml
     postgresql
@@ -162,7 +166,6 @@ usr_path=$configure_prefix
 gem_home="$system_path/gems"
 gem_path=$gem_home
 
-
 #
 # Special config for packages that need something extra.
 # These are called dynamically using the obvious naming convention.
@@ -214,6 +217,9 @@ if [[ "Darwin" == "$(uname)" ]]; then
 else
     configure_openssl="./config $common_configure_openssl"
 fi
+
+configure_ncurses="CFLAGS=-fPIC ./configure"
+configure_heimdal="LIBRARY_PATH=$usr_path/lib ./configure"
 
 configure_curl="./configure \
 --with-ssl=$usr_path \
@@ -363,7 +369,7 @@ install_from_src() {
     handle_failure $1
 
     echo "  * Compiling"
-    make 2>> $logs_path/$1 1>> $logs_path/$1
+    DYLD_LIBRARY_PATH=$usr_path/lib LIBRARY_PATH=$usr_path/lib LD_LIBRARY_PATH=$usr_path/lib make 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 
     echo "  * Installing"
