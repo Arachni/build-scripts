@@ -83,8 +83,16 @@ libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
     http://www.openssl.org/source/openssl-1.0.1i.tar.gz
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
-    http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
-    http://www.h5l.org/dist/src/heimdal-1.4.1rc2.tar.gz
+)
+
+if [[ !$(is_osx) ]]; then
+    libs+=(
+        http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
+        http://www.h5l.org/dist/src/heimdal-1.5.1.tar.gz
+    )
+fi
+
+libs+=(
     http://curl.haxx.se/download/curl-7.41.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.1/postgresql-9.4.1.tar.gz
@@ -104,8 +112,16 @@ libs_so=(
     libz
     libssl
     libsqlite3
-    libncurses
-    libkrb5
+)
+
+if [[ !$(is_osx) ]]; then
+    libs_so+=(
+        libncurses
+        libkrb5
+    )
+fi
+
+libs_so+=(
     libcurl
     libyaml
     postgresql
@@ -195,7 +211,7 @@ configure_ruby="./configure --with-opt-dir=$configure_prefix \
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
 
-if [[ "Darwin" == "$(uname)" ]]; then
+if [[ $(is_osx) ]]; then
 
     hw_machine=$(sysctl hw.machine | awk -F: '{print $2}' | sed 's/^ //')
     hw_cpu64bit=$(sysctl hw.cpu64bit_capable | awk '{print $2}')
@@ -237,7 +253,7 @@ configure_heimdal="LIBRARY_PATH=$usr_path/lib ./configure"
 configure_curl="./configure \
 --with-ssl=$usr_path \
 --with-zlib=$usr_path \
---with-gssapi \
+--with-gssapi=$usr_path \
 --with-spnego \
 --without-librtmp \
 --enable-optimize \
