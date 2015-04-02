@@ -234,20 +234,6 @@ else
     configure_openssl="./config $common_configure_openssl"
 fi
 
-configure_ncurses="CFLAGS=-fPIC ./configure \
- --without-cxx \
- --without-cxx-binding \
- --without-ada \
- --without-progs \
- --without-curses-h \
---with-shared \
---without-debug \
---enable-widec \
---enable-const \
---enable-ext-colors \
---enable-sigwinch \
---enable-wgetch-events"
-
 configure_heimdal="LIBRARY_PATH=$usr_path/lib ./configure"
 
 configure_curl="./configure \
