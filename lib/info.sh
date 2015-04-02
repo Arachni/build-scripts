@@ -44,10 +44,6 @@ proxy(){
     echo $ARACHNI_PROXY
 }
 
-is_osx(){
-    [[ "Darwin" == "$(uname)" ]]
-}
-
 # OS name of host.
 operating_system(){
     uname -s | awk '{print tolower($0)}'

@@ -85,7 +85,7 @@ libs=(
     http://www.sqlite.org/2014/sqlite-autoconf-3080500.tar.gz
 )
 
-if [[ !$(is_osx) ]]; then
+if [[ "Darwin" != "$(uname)" ]]; then
     libs+=(
         http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.9.tar.gz
         http://www.h5l.org/dist/src/heimdal-1.5.1.tar.gz
@@ -114,7 +114,7 @@ libs_so=(
     libsqlite3
 )
 
-if [[ !$(is_osx) ]]; then
+if [[ "Darwin" != "$(uname)" ]]; then
     libs_so+=(
         libncurses
         libkrb5
@@ -211,7 +211,7 @@ configure_ruby="./configure --with-opt-dir=$configure_prefix \
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
 
-if [[ $(is_osx) ]]; then
+if [[ "Darwin" == "$(uname)" ]]; then
 
     hw_machine=$(sysctl hw.machine | awk -F: '{print $2}' | sed 's/^ //')
     hw_cpu64bit=$(sysctl hw.cpu64bit_capable | awk '{print $2}')
