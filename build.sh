@@ -283,6 +283,7 @@ setup_dirs( ) {
         $system_path/logs/framework
         $system_path/logs/webui
         $system_path/gems
+        $system_path/home/arachni
         $system_path/usr/bin
         $system_path/usr/include
         $system_path/usr/info
@@ -534,6 +535,11 @@ get_wrapper_environment() {
 
 source "\$(dirname \$0)/readlink_f.sh"
 source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
+
+# PhantomJS cache is under \$HOME/.qws/ and each version may affect it differently,
+# so each package needs its own \$HOME.
+export HOME=\"$env_root/home/arachni"
+
 exec $1
 
 EOF
