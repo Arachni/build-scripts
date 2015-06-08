@@ -538,7 +538,7 @@ source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
 
 # PhantomJS cache is under \$HOME/.qws/ and each version may affect it differently,
 # so each package needs its own \$HOME.
-export HOME=\"$env_root/home/arachni"
+export HOME="\$env_root/home/arachni"
 
 exec $1
 
