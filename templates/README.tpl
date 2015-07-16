@@ -9,7 +9,7 @@ Code Documentation - http://rubydoc.info/github/Arachni/arachni
 Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
 Twitter            - http://twitter.com/ArachniScanner
 Copyright          - 2010-2015 Tasos Laskos
-License            - Dual-licensed (Apache License v2.0/Commercial -- see LICENSE file)
+License            - Arachni Public Source License v1.0 -- see LICENSE file)
 --------------------------------------------------------------------------------
 
 To use Arachni run the executables under "bin/".
