@@ -488,7 +488,7 @@ get_ruby_environment() {
 # $env_root is set by the caller.
 #
 
-echo "\$LD_LIBRARY_PATH-\$DYLD_FALLBACK_LIBRARY_PATH" | egrep \$env_root > /dev/null
+echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
     
@@ -500,9 +500,6 @@ if [[ \$? -ne 0 ]] ; then
 
     # Won't work on OSX >= 10.11, doesn't export it to subshells.
     export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
-
-    # For OSX >= 10.11.
-    export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
 fi
 
 export RUBY_VERSION; RUBY_VERSION='ruby-2.2.2'
