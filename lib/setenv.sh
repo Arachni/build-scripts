@@ -5,11 +5,6 @@
 source `dirname $0`"/lib/readlink_f.sh"
 source `dirname $0`"/lib/info.sh"
 
-if [[ "$(operating_system)" == "darwin" && "$(sw_vers -productVersion)" == "10.11"* ]]; then
-    echo "Mac OSX 10.11 'El Capitan' is not supported."
-    exit 1
-fi
-
 if [ -n "$ARACHNI_PROXY" ]; then
 	export HTTP_PROXY=$ARACHNI_PROXY
 	export http_proxy=$ARACHNI_PROXY

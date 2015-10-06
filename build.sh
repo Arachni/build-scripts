@@ -484,6 +484,11 @@ get_ruby_environment() {
 # *DO NOT EDIT* unless you really, really know what you're doing.
 #
 
+if [[ "\$(operating_system)" == "darwin" && "\$(sw_vers -productVersion)" == "10.11"* ]]; then
+    echo "Mac OSX 10.11 'El Capitan' is not supported."
+    exit 1
+fi
+
 #
 # $env_root is set by the caller.
 #
