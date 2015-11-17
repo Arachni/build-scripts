@@ -484,18 +484,14 @@ get_ruby_environment() {
 # *DO NOT EDIT* unless you really, really know what you're doing.
 #
 
-operating_system=\$(uname -s | awk '{print tolower(\$0)}')
-
-if [[ "\$operating_system" == "darwin" && "\$(sw_vers -productVersion)" == "10.11"* ]]; then
-    echo "Mac OSX 10.11 'El Capitan' is not supported."
-    exit 1
-fi
-
 #
 # $env_root is set by the caller.
 #
 
-echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH" | egrep \$env_root > /dev/null
+operating_system=\$(uname -s | awk '{print tolower(\$0)}')
+
+# Only set paths if not already configured.
+echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH-\$DYLD_FALLBACK_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
     export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
     
@@ -505,8 +501,13 @@ if [[ \$? -ne 0 ]] ; then
     export LIBRARY_PATH="\$env_root/usr/lib"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
-    # Won't work on OSX >= 10.11, doesn't export it to subshells.
-    export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
+    # OSX 10.11 idiosyncrasy.
+    if [[ "\$operating_system" == "darwin" && "\$(sw_vers -productVersion)" == "10.11"* ]]; then
+        export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
+    else
+        export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
+    fi
+
 fi
 
 export RUBY_VERSION; RUBY_VERSION='ruby-2.2.2'
