@@ -561,24 +561,24 @@ exec $1
 EOF
 }
 
+get_shell_script() {
+    get_wrapper_environment '; export PS1="\u@\h:\w \033[0;32m\][arachni-shell]\[\033[0m\$ "; bash --noprofile --norc "$@"'
+}
+
 get_wrapper_template() {
     get_wrapper_environment "ruby $1 \"\$@\""
 }
 
 get_server_script() {
-    get_wrapper_environment '$GEM_PATH/bin/rackup $env_root/arachni-ui-web/config.ru  "$@"'
+    get_wrapper_template '$GEM_PATH/bin/rackup $env_root/arachni-ui-web/config.ru'
 }
 
 get_rake_script() {
-    get_wrapper_environment '$GEM_PATH/bin/rake -f $env_root/arachni-ui-web/Rakefile "$@"'
-}
-
-get_shell_script() {
-    get_wrapper_environment '; export PS1="\u@\h:\w \033[0;32m\][arachni-shell]\[\033[0m\$ "; bash --noprofile --norc "$@"'
+    get_wrapper_template '$GEM_PATH/bin/rake -f $env_root/arachni-ui-web/Rakefile'
 }
 
 get_rails_runner_script() {
-    get_wrapper_environment '$env_root/arachni-ui-web/bin/rails runner "$@"'
+    get_wrapper_template '$env_root/arachni-ui-web/bin/rails runner'
 }
 
 #
