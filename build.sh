@@ -92,13 +92,14 @@ if [[ "Darwin" != "$(uname)" ]]; then
     )
 fi
 
+# Let freetype on that version to avoid build error on OSX.
 libs+=(
     http://curl.haxx.se/download/curl-7.45.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
-    http://download.savannah.gnu.org/releases/freetype/freetype-2.6.1.tar.gz
+    http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
     http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.gz
 )
 
