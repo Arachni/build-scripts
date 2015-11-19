@@ -524,6 +524,15 @@ export RAILS_ENV=production
 export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
 export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
 
+EOF
+}
+
+get_setenv() {
+    cat<<EOF
+#!/usr/bin/env bash
+
+env_root="\$(dirname \${BASH_SOURCE[0]})"
+
 writtable="
     arachni-ui-web/config/component_cache
     arachni-ui-web/db
@@ -541,14 +550,6 @@ for directory in \$writtable; do
     fi
 done
 
-EOF
-}
-
-get_setenv() {
-    cat<<EOF
-#!/usr/bin/env bash
-
-env_root="\$(dirname \${BASH_SOURCE[0]})"
 if [[ -s "\$env_root/environment" ]]; then
     source "\$env_root/environment"
 else
