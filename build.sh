@@ -524,6 +524,23 @@ export RAILS_ENV=production
 export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
 export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
 
+writtable="
+    arachni-ui-web/config/component_cache
+    arachni-ui-web/db
+    arachni-ui-web/tmp
+    logs
+    home
+"
+
+for directory in \$writtable; do
+    directory="\$env_root/\$directory"
+
+    if [[ ! -w "\$directory" ]]; then
+        echo "[ERROR] Directory and subdirectories must be writtable: \$directory"
+        exit 1
+    fi
+done
+
 EOF
 }
 
