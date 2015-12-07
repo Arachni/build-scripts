@@ -81,7 +81,7 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    http://www.openssl.org/source/openssl-1.0.2d.tar.gz
+    http://www.openssl.org/source/openssl-1.0.2e.tar.gz
     http://www.sqlite.org/2015/sqlite-autoconf-3090200.tar.gz
 )
 
