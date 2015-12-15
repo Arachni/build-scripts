@@ -100,7 +100,7 @@ libs+=(
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
-    http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.gz
+    http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
 
 #
