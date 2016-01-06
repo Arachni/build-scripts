@@ -94,7 +94,7 @@ fi
 
 # Let freetype on that version to avoid build error on OSX.
 libs+=(
-    http://curl.haxx.se/download/curl-7.45.0.tar.gz
+    http://curl.haxx.se/download/curl-7.41.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
