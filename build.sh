@@ -81,6 +81,8 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
+    # Stick with the 1.0.1 branch due to:
+    #   https://github.com/Arachni/arachni/issues/653
     http://openssl.org/source/openssl-1.0.1q.tar.gz
     http://www.sqlite.org/2015/sqlite-autoconf-3090200.tar.gz
 )
@@ -92,14 +94,16 @@ if [[ "Darwin" != "$(uname)" ]]; then
     )
 fi
 
-# Let freetype on that version to avoid build error on OSX.
 libs+=(
-    http://curl.haxx.se/download/curl-7.41.0.tar.gz
+    http://curl.haxx.se/download/curl-7.46.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
     http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
+    # Stick with this version to avoid build errors on OSX.
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
+    # Stick with this version due to:
+    #   https://github.com/Arachni/arachni/issues/648
     http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
 
