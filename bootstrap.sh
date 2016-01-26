@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2015 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
 
 build_script_tarball="https://github.com/Arachni/build-scripts/tarball/master"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2015 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
 
 source `dirname $0`"/lib/readlink_f.sh"
 source `dirname $0`"/lib/info.sh"

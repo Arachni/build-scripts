@@ -8,7 +8,7 @@ GitHub page        - http://github.com/Arachni/arachni
 Code Documentation - http://rubydoc.info/github/Arachni/arachni
 Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
 Twitter            - http://twitter.com/ArachniScanner
-Copyright          - 2010-2015 Tasos Laskos
+Copyright          - 2010-2016 Tasos Laskos
 License            - Arachni Public Source License v1.0 -- see LICENSE file)
 --------------------------------------------------------------------------------
 

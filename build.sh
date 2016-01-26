@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2015 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
 #
 # Credits:
 #     Tasos Laskos <tasos.laskos@gmail.com> -- Original Linux version
@@ -852,7 +852,7 @@ Useful resources:
     * Code Documentation - http://rubydoc.info/github/Arachni/arachni
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
-    * Copyright          - 2010-2015 Tasos Laskos
+    * Copyright          - 2010-2016 Tasos Laskos
 
 Have fun ;)
 
