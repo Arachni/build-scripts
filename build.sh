@@ -503,7 +503,10 @@ if [[ \$? -ne 0 ]] ; then
     export C_INCLUDE_PATH="\$env_root/usr/include"
     export CPLUS_INCLUDE_PATH="\$C_INCLUDE_PATH"
 
-    export LIBRARY_PATH="\$env_root/usr/lib"
+    # We also set the default paths to make sure that they will be seen by the OS.
+    # There have been issues with Ruby FFI (mostly on OSX 10.11) but why risk it,
+    # set these always just to make sure.
+    export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
     # OSX 10.11 idiosyncrasy.
