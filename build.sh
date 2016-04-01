@@ -621,10 +621,6 @@ prepare_ruby() {
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
 
-    echo "  * Installing Rake"
-    $usr_path/bin/gem install rake --no-ri  --no-rdoc  2>> "$logs_path/rake" 1>> "$logs_path/rake"
-    handle_failure "rake"
-
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
     handle_failure "bundler"
@@ -703,24 +699,24 @@ install_arachni() {
 
     # If we don't do this Rails 4 will keep printing annoying messages when using the runner
     # or console.
-    yes | $gem_path/bin/rake rails:update:bin 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    yes | $gem_path/bin/bundle exec $gem_path/bin/rake rails:update:bin 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     echo "  * Precompiling assets"
-    $gem_path/bin/rake assets:precompile 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle exec $gem_path/bin/rake assets:precompile 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     echo "  * Setting-up the database"
-    $gem_path/bin/rake db:migrate 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle exec $gem_path/bin/rake db:migrate 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
-    $gem_path/bin/rake db:setup 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle exec $gem_path/bin/rake db:setup 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     echo "  * Writing full version to VERSION file"
 
     # Needed by build_and_package.sh to figure out the release version and it's
     # nice to have anyways.
-    $gem_path/bin/rake version:full > "$root/VERSION"
+    $gem_path/bin/bundle exec $gem_path/bin/rake version:full > "$root/VERSION"
     handle_failure "arachni-ui-web"
 }
 
