@@ -241,7 +241,7 @@ fi
 
 configure_ncurses="CFLAGS=-fPIC ./configure"
 
-configure_heimdal="LIBRARY_PATH=$usr_path/lib ./configure"
+configure_heimdal="LIBRARY_PATH=$usr_path/lib LDFLAGS=-lpthread ./configure"
 
 configure_curl="./configure \
 --with-ssl=$usr_path \
