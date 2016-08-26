@@ -289,6 +289,7 @@ setup_dirs( ) {
         $system_path/logs/webui
         $system_path/gems
         $system_path/home/arachni
+        $system_path/home/arachni/.fonts
         $system_path/usr/bin
         $system_path/usr/include
         $system_path/usr/info
@@ -305,6 +306,8 @@ setup_dirs( ) {
             echo " -- already exists."
         fi
     done
+
+    cp -R "$scriptdir/data/fonts/"* "$system_path/home/arachni/.fonts/"
 
     cd - > /dev/null
 }
