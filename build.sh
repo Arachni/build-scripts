@@ -89,7 +89,7 @@ libs=(
 
 if [[ "Darwin" != "$(uname)" ]]; then
     libs+=(
-        # http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
+        http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
         http://www.h5l.org/dist/src/heimdal-1.5.3.tar.gz
     )
 fi
