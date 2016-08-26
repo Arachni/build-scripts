@@ -98,7 +98,9 @@ libs+=(
     http://curl.haxx.se/download/curl-7.46.0.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
-    http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
+    # Stick with this version for now:
+    #   https://gist.github.com/cclements/d20109ad07c24d004b910ca3ef59d02d
+    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     # Stick with this version to avoid build errors on OSX.
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
@@ -464,7 +466,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.3.0/"
+    cd "$usr_path/lib/ruby/2.2.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -480,7 +482,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.3.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.3.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.2.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.2.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -521,11 +523,11 @@ if [[ \$? -ne 0 ]] ; then
 
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.3.1'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.2.3'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.3.0:\$MY_RUBY_HOME/2.3.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.2.0:\$MY_RUBY_HOME/2.2.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
