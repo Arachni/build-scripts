@@ -121,7 +121,7 @@ libs_so=(
 
 if [[ "Darwin" != "$(uname)" ]]; then
     libs_so+=(
-        # libncurses
+        libncurses
         libkrb5
     )
 fi
