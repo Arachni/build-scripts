@@ -498,6 +498,8 @@ get_ruby_environment() {
 # $env_root is set by the caller.
 #
 
+function version { echo "$@" | awk -F. '{ printf("%d%d\n", $1,$2); }'; }
+
 operating_system=\$(uname -s | awk '{print tolower(\$0)}')
 
 # Only set paths if not already configured.
@@ -514,11 +516,13 @@ if [[ \$? -ne 0 ]] ; then
     export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
-    # OSX 10.11 idiosyncrasy.
-    if [[ "\$operating_system" == "darwin" && "\$(sw_vers -productVersion)" == "10.11"* ]]; then
-        export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
-    else
-        export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
+    if [[ "\$operating_system" == "darwin" ]]; then
+        # OSX >= 10.11 idiosyncrasy.
+        if [[ \`version "\$(sw_vers -productVersion)"\` -gt $(version "10.10") ]]; then
+            export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
+        else
+            export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
+        fi
     fi
 
 fi
