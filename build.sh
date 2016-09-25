@@ -498,7 +498,7 @@ get_ruby_environment() {
 # $env_root is set by the caller.
 #
 
-function version { echo "$@" | awk -F. '{ printf("%d%d\n", $1,$2); }'; }
+function version { echo "\$@" | awk -F. '{ printf("%d%d\n", \$1,\$2); }'; }
 
 operating_system=\$(uname -s | awk '{print tolower(\$0)}')
 
@@ -510,20 +510,20 @@ if [[ \$? -ne 0 ]] ; then
     export C_INCLUDE_PATH="\$env_root/usr/include"
     export CPLUS_INCLUDE_PATH="\$C_INCLUDE_PATH"
 
-    # We also set the default paths to make sure that they will be seen by the OS.
-    # There have been issues with Ruby FFI (mostly on OSX 10.11) but why risk it,
+    # We also set the default paths to make sure that they will be seen by the OS. 
+    # There have been issues with Ruby FFI (mostly on OSX 10.11) but why risk it, 
     # set these always just to make sure.
     export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
     if [[ "\$operating_system" == "darwin" ]]; then
         # OSX >= 10.11 idiosyncrasy.
-        if [[ \`version "\$(sw_vers -productVersion)"\` -gt $(version "10.10") ]]; then
+        if [[ \`version "\$(sw_vers -productVersion)"\` -gt \$(version "10.10") ]]; then
             export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
         else
             export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
-        fi
-    fi
+        fi  
+    fi  
 
 fi
 
