@@ -81,9 +81,7 @@ arachni_tarball_url=`tarball_url`
 #
 libs=(
     http://zlib.net/zlib-1.2.8.tar.gz
-    # Stick with the 1.0.1 branch due to:
-    #   https://github.com/Arachni/arachni/issues/653
-    http://openssl.org/source/openssl-1.0.1q.tar.gz
+    http://openssl.org/source/openssl-1.0.2j.tar.gz
     http://www.sqlite.org/2015/sqlite-autoconf-3090200.tar.gz
 )
 
@@ -95,12 +93,10 @@ if [[ "Darwin" != "$(uname)" ]]; then
 fi
 
 libs+=(
-    http://curl.haxx.se/download/curl-7.46.0.tar.gz
+    http://curl.haxx.se/download/curl-7.50.3.tar.gz
     http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
-    # Stick with this version for now:
-    #   https://gist.github.com/cclements/d20109ad07c24d004b910ca3ef59d02d
-    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
+    http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
     http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     # Stick with this version to avoid build errors on OSX.
     http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
@@ -241,7 +237,7 @@ else
     configure_openssl="./config $common_configure_openssl"
 fi
 
-configure_ncurses="CFLAGS=-fPIC ./configure"
+configure_ncurses="CFLAGS=-fPIC CPPFLAGS=-P ./configure"
 
 configure_heimdal="LIBRARY_PATH=$usr_path/lib LDFLAGS=-lpthread ./configure"
 
@@ -466,7 +462,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.2.0/"
+    cd "$usr_path/lib/ruby/2.3.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -482,7 +478,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.2.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.2.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.3.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.3.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -527,11 +523,11 @@ if [[ \$? -ne 0 ]] ; then
 
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.2.3'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.3.1'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.2.0:\$MY_RUBY_HOME/2.2.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.3.0:\$MY_RUBY_HOME/2.3.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -626,6 +622,14 @@ prepare_ruby() {
     echo "  * Generating environment configuration ($env_root/environment)"
     get_ruby_environment > $env_root/environment
     source $env_root/environment
+
+    # So sick of RubyGems SSL errors, grab and install the CA Cert manually.
+    cert_url="https://secure.globalsign.net/cacert/Root-R1.crt"
+    cert_directory="$system_path/usr/lib/ruby/2.3.0/rubygems/ssl_certs"
+    cert_path="$cert_directory/R1GlobalSignRoot.crt"
+
+    download $cert_url "-O $cert_path"
+    openssl x509 -inform der -in "$cert_path" -out "$cert_directory/R1GlobalSignRoot.pem"
 
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
@@ -834,9 +838,9 @@ cp "$scriptdir/templates/TROUBLESHOOTING.tpl" "$root/TROUBLESHOOTING"
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then
-    LC_ALL=C find $env_root/ -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
+    LC_ALL=C find "$env_root/" -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
 else
-    find $env_root/ -type f -exec sed -i 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
+    find "$env_root/" -type f -exec sed -i 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
 fi
 
 echo
