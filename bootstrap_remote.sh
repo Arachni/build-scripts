@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
 
 source `dirname $0`/lib/setenv.sh
 

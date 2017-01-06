@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
-#
-# Credits:
-#     Tasos Laskos <tasos.laskos@gmail.com> -- Original Linux version
-#     Edwin van Andel <evanandel@yafsec.com> -- Patches for *BSD and testing
-#     Dan Woodruff <daniel.woodruff@gmail.com> -- Patches for OSX and testing
-#
+# Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
 
 source `dirname $0`/lib/setenv.sh
 

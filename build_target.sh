@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
 
 ls `dirname $0`/targets/$1.sh 2>> /dev/null 1>> /dev/null
 if [[ $? != 0 ]]; then
