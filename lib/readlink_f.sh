@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2016 Tasos Laskos <tasos.laskos@arachni-scanner.com>
+# Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
 
 # *BSD's readlink doesn't like non-existent dirs so we use this one instead.
 readlink_f(){
