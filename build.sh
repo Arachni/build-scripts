@@ -74,7 +74,7 @@ arachni_tarball_url=`tarball_url`
 # All system library dependencies in proper installation order.
 #
 libs=(
-    http://zlib.net/zlib-1.2.10.tar.gz
+    http://zlib.net/zlib-1.2.11.tar.gz
     # Stick with the 1.0.1 branch due to:
     #   https://github.com/Arachni/arachni/issues/653
     http://openssl.org/source/openssl-1.0.1q.tar.gz
