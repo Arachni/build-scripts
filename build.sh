@@ -235,7 +235,7 @@ else
     configure_openssl="./config $common_configure_openssl"
 fi
 
-configure_ncurses="CFLAGS=-fPIC ./configure"
+configure_ncurses="CFLAGS=-fPIC CPPFLAGS=-P ./configure"
 
 configure_heimdal="LIBRARY_PATH=$usr_path/lib LDFLAGS=-lpthread ./configure"
 
