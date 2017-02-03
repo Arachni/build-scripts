@@ -621,6 +621,15 @@ prepare_ruby() {
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
+    echo "  * Grabing SSL certificate"
+    # So sick of RubyGems SSL errors, grab and install the CA Cert manually.
+    cert_url="https://secure.globalsign.net/cacert/Root-R1.crt"
+    cert_directory="$system_path/usr/lib/ruby/2.2.0/rubygems/ssl_certs"
+    cert_path="$cert_directory/R1GlobalSignRoot.crt"
+
+    download $cert_url "-O $cert_path"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
+    openssl x509 -inform der -in "$cert_path" -out "$cert_directory/R1GlobalSignRoot.pem"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
+
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
