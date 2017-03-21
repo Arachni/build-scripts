@@ -66,7 +66,7 @@ archive="$pkg_name-`operating_system`-`architecture`.tar.gz"
 echo "  * Compressing build dir ($pkg_name)"
 tar czf $archive -C `dirname $(readlink_f $pkg_name )` $pkg_name
 
-shasum $archive | awk '{ print $1 }' > "$archive.sha1"
+shasum -a 512 $archive | awk '{ print $1 }' > "$archive.sha512"
 
 echo
 cat<<EOF
@@ -76,8 +76,8 @@ cat<<EOF
 
 Completed successfully!
 
-Archive is at:        `readlink_f $archive`
-SHA1 hash file is at: `readlink_f $archive`.sha1
+Archive is at:          `readlink_f $archive`
+SHA512 hash file is at: `readlink_f $archive`.sha512
 
 Cheers,
 The Arachni team.
