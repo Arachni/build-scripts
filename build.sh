@@ -489,7 +489,7 @@ get_ruby_environment() {
 #
 
 #
-# $env_root is set by the caller.
+# \$env_root is set by the caller.
 #
 
 function version { echo "\$@" | awk -F. '{ printf("%d%d\n", \$1,\$2); }'; }
