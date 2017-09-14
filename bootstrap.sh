@@ -61,7 +61,7 @@ echo '----------------------------------------'
 
 echo -n "  * Downloading"
 echo -n " -  0% ETA:      -s"
-wget -c --progress=dot --no-check-certificate $build_script_tarball -O $build_scripts_outfile 2>&1 | \
+wget -c --progress=dot $build_script_tarball -O $build_scripts_outfile 2>&1 | \
     while read line; do
         echo $line | grep "%" | sed -e "s/\.//g" | \
         awk '{printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b%4s ETA: %6s", $2, $4)}'

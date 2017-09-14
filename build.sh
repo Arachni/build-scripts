@@ -74,33 +74,33 @@ arachni_tarball_url=`tarball_url`
 # All system library dependencies in proper installation order.
 #
 libs=(
-    http://zlib.net/zlib-1.2.11.tar.gz
+    https://zlib.net/zlib-1.2.11.tar.gz
     # Stick with the 1.0.1 branch due to:
     #   https://github.com/Arachni/arachni/issues/653
-    http://openssl.org/source/openssl-1.0.1q.tar.gz
-    http://www.sqlite.org/2015/sqlite-autoconf-3090200.tar.gz
+    https://openssl.org/source/openssl-1.0.1q.tar.gz
+    https://www.sqlite.org/2015/sqlite-autoconf-3090200.tar.gz
 )
 
 if [[ "Darwin" != "$(uname)" ]]; then
     libs+=(
-        http://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
-        http://www.h5l.org/dist/src/heimdal-1.5.3.tar.gz
+        https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
+        https://www.h5l.org/dist/src/heimdal-1.5.3.tar.gz
     )
 fi
 
 libs+=(
-    http://curl.haxx.se/download/curl-7.46.0.tar.gz
-    http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
-    http://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
+    https://curl.haxx.se/download/curl-7.46.0.tar.gz
+    https://ftp.osuosl.org/pub/blfs/7.10/y/yaml-0.1.6.tar.gz
+    https://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
     # Stick with this version for now:
     #   https://gist.github.com/cclements/d20109ad07c24d004b910ca3ef59d02d
-    http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
-    http://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
+    https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
+    https://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     # Stick with this version to avoid build errors on OSX.
-    http://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
+    https://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
     # Stick with this version due to:
     #   https://github.com/Arachni/arachni/issues/648
-    http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
+    https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
 )
 
 #
@@ -328,7 +328,7 @@ handle_failure(){
 download() {
     echo -n "  * Downloading $1"
     echo -n " -  0% ETA:      -s"
-    wget -c --progress=dot --no-check-certificate $1 $2 2>&1 | \
+    wget -c --progress=dot $1 $2 2>&1 | \
         while read line; do
             echo $line | grep "%" | sed -e "s/\.//g" | \
             awk '{printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b%4s ETA: %6s", $2, $4)}'
@@ -617,10 +617,6 @@ get_rails_runner_script() {
 prepare_ruby() {
     export env_root=$system_path
 
-    echo "  * Generating environment configuration ($env_root/environment)"
-    get_ruby_environment > $env_root/environment
-    source $env_root/environment
-
     echo "  * Grabing SSL certificate"
     # So sick of RubyGems SSL errors, grab and install the CA Cert manually.
     cert_url="https://secure.globalsign.net/cacert/Root-R1.crt"
@@ -629,6 +625,10 @@ prepare_ruby() {
 
     download $cert_url "-O $cert_path"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
     openssl x509 -inform der -in "$cert_path" -out "$cert_directory/R1GlobalSignRoot.pem"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
+
+    echo "  * Generating environment configuration ($env_root/environment)"
+    get_ruby_environment > $env_root/environment
+    source $env_root/environment
 
     echo "  * Updating Rubygems"
     $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
@@ -686,12 +686,7 @@ install_phantomjs() {
     fi
 }
 
-#
-# Installs the Arachni Web User Interface which in turn pulls in the Framework
-# as a dependency, that way we kill two birds with one package.
-#
-install_arachni() {
-
+download_arachni() {
     # The Arachni Web interface archive needs to be stored under $system_path
     # because it needs to be preserved, it is our app after all.
     rm "$archives_path/arachni-ui-web.tar.gz" &> /dev/null
@@ -701,9 +696,18 @@ install_arachni() {
 
     # GitHub may append the git ref or branch to the folder name, strip it.
     mv $system_path/arachni-ui-web* $system_path/arachni-ui-web
-    cd $system_path/arachni-ui-web
+
+}
+
+#
+# Installs the Arachni Web User Interface which in turn pulls in the Framework
+# as a dependency, that way we kill two birds with one package.
+#
+install_arachni() {
 
     echo "  * Installing"
+
+    cd $system_path/arachni-ui-web
 
     # Install the Rails bundle *with* binstubs because we'll need to symlink
     # them from the package executables under $root/bin/.
@@ -777,17 +781,17 @@ install_bin_wrappers() {
 }
 
 echo
-echo '# (1/6) Creating directories'
+echo '# (1/7) Creating directories'
 echo '---------------------------------'
 setup_dirs
 
 echo
-echo '# (2/6) Installing dependencies'
+echo '# (2/7) Installing dependencies'
 echo '-----------------------------------'
 install_libs
 
 echo
-echo '# (3/6) Installing PhantomJS'
+echo '# (3/7) Installing PhantomJS'
 echo '-----------------------------------'
 install_phantomjs
 echo
@@ -799,17 +803,22 @@ if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
 fi
 
 echo
-echo '# (4/6) Preparing the Ruby environment'
+echo '# (4/7) Downloading Arachni'
+echo '-------------------------------------------'
+download_arachni
+
+echo
+echo '# (5/7) Preparing the Ruby environment'
 echo '-------------------------------------------'
 prepare_ruby
 
 echo
-echo '# (5/6) Installing Arachni'
+echo '# (6/7) Installing Arachni'
 echo '-------------------------------'
 install_arachni
 
 echo
-echo '# (6/6) Installing bin wrappers'
+echo '# (7/7) Installing bin wrappers'
 echo '------------------------------------'
 install_bin_wrappers
 
