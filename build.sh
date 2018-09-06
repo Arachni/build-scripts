@@ -94,7 +94,7 @@ libs+=(
     https://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
     # Stick with this version for now:
     #   https://gist.github.com/cclements/d20109ad07c24d004b910ca3ef59d02d
-    https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz
+    https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.4.tar.gz
     https://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
     # Stick with this version to avoid build errors on OSX.
     https://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
@@ -460,7 +460,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.2.0/"
+    cd "$usr_path/lib/ruby/2.4.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -476,7 +476,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.2.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.2.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.4.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.4.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -521,11 +521,11 @@ if [[ \$? -ne 0 ]] ; then
 
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.2.3'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.4.4'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.2.0:\$MY_RUBY_HOME/2.2.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.4.0:\$MY_RUBY_HOME/2.4.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -620,7 +620,7 @@ prepare_ruby() {
     echo "  * Grabing SSL certificate"
     # So sick of RubyGems SSL errors, grab and install the CA Cert manually.
     cert_url="https://secure.globalsign.net/cacert/Root-R1.crt"
-    cert_directory="$system_path/usr/lib/ruby/2.2.0/rubygems/ssl_certs"
+    cert_directory="$system_path/usr/lib/ruby/2.4.0/rubygems/ssl_certs"
     cert_path="$cert_directory/R1GlobalSignRoot.crt"
 
     download $cert_url "-O $cert_path"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
@@ -709,9 +709,7 @@ install_arachni() {
 
     cd $system_path/arachni-ui-web
 
-    # Install the Rails bundle *with* binstubs because we'll need to symlink
-    # them from the package executables under $root/bin/.
-    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle install 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     # If we don't do this Rails 4 will keep printing annoying messages when using the runner
