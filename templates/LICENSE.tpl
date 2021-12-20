@@ -1,4 +1,4 @@
-Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
+Copyright 2010-2022 Ecsypno LLC <http://www.ecsypno.com>
 
                     Arachni Public Source License
                         Version 1.0, June 2015

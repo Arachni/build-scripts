@@ -8,7 +8,7 @@ GitHub page        - http://github.com/Arachni/arachni
 Code Documentation - http://rubydoc.info/github/Arachni/arachni
 Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
 Twitter            - http://twitter.com/ArachniScanner
-Copyright          - 2010-2017 Sarosys LLC
+Copyright          - 2010-2022 Ecsypno LLC
 License            - Arachni Public Source License v1.0 -- see LICENSE file)
 --------------------------------------------------------------------------------
 
@@ -56,7 +56,3 @@ caused by the use of this software.
 Copying
 --------------
 For the Arachni license please see the LICENSE file.
-
-The bundled PhantomJS (http://phantomjs.org/) executable is distributed
-under the BSD license:
-    https://github.com/ariya/phantomjs/blob/master/LICENSE.BSD
