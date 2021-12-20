@@ -34,6 +34,8 @@ echo
 echo "# Checking for script dependencies"
 echo '----------------------------------------'
 deps="
+    gperf
+    flex
     wget
     gcc
     g++
@@ -83,24 +85,19 @@ libs=(
 
 if [[ "Darwin" != "$(uname)" ]]; then
     libs+=(
-        https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.0.tar.gz
-        https://github.com/heimdal/heimdal/archive/refs/tags/heimdal-1.5.3.tar.gz
+        http://ftp.vim.org/ftp/gnu/ncurses/ncurses-6.0.tar.gz
+        https://distfiles.macports.org/heimdal/heimdal-1.5.3.tar.gz
     )
 fi
 
 libs+=(
     https://curl.haxx.se/download/curl-7.46.0.tar.gz
-    https://ftp.osuosl.org/pub/blfs/7.10/y/yaml-0.1.6.tar.gz
+    https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     https://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
-    # Stick with this version for now:
-    #   https://gist.github.com/cclements/d20109ad07c24d004b910ca3ef59d02d
-    https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.4.tar.gz
-    https://downloads.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz
+    https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.9.tar.gz
+    https://netix.dl.sourceforge.net/project/expat/expat/2.4.2/expat-2.4.2.tar.gz
     # Stick with this version to avoid build errors on OSX.
-    https://download.savannah.gnu.org/releases/freetype/freetype-2.5.3.tar.gz
-    # Stick with this version due to:
-    #   https://github.com/Arachni/arachni/issues/648
-    https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.1.tar.gz
+    https://iweb.dl.sourceforge.net/project/freetype/freetype2/2.5.3/freetype-2.5.3.tar.gz
 )
 
 #
@@ -460,7 +457,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.4.0/"
+    cd "$usr_path/lib/ruby/2.6.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -476,7 +473,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.4.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.4.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.6.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.6.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -495,6 +492,8 @@ get_ruby_environment() {
 function version { echo "\$@" | awk -F. '{ printf("%d%d\n", \$1,\$2); }'; }
 
 operating_system=\$(uname -s | awk '{print tolower(\$0)}')
+
+export HOST_PATH=\$PATH
 
 # Only set paths if not already configured.
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH-\$DYLD_FALLBACK_LIBRARY_PATH" | egrep \$env_root > /dev/null
@@ -521,11 +520,11 @@ if [[ \$? -ne 0 ]] ; then
 
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.4.4'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.6.9'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.4.0:\$MY_RUBY_HOME/2.4.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.6.0:\$MY_RUBY_HOME/2.6.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -581,12 +580,21 @@ get_wrapper_environment() {
 source "\$(dirname \$0)/readlink_f.sh"
 source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
 
-# PhantomJS cache is under \$HOME/.qws/ and each version may affect it differently,
-# so each package needs its own \$HOME.
 export HOME="\$env_root/home/arachni"
-export FONTCONFIG_PATH="\$HOME/.fonts"
 
 exec $1
+
+EOF
+}
+
+get_chromedriver_script() {
+    cat<<EOF
+#!/usr/bin/env bash
+
+export LD_LIBRARY_PATH="" 
+export PATH=\$HOST_PATH 
+
+\`which chromedriver\` "\$@"
 
 EOF
 }
@@ -617,73 +625,17 @@ get_rails_runner_script() {
 prepare_ruby() {
     export env_root=$system_path
 
-    echo "  * Grabing SSL certificate"
-    # So sick of RubyGems SSL errors, grab and install the CA Cert manually.
-    cert_url="https://secure.globalsign.net/cacert/Root-R1.crt"
-    cert_directory="$system_path/usr/lib/ruby/2.4.0/rubygems/ssl_certs"
-    cert_path="$cert_directory/R1GlobalSignRoot.crt"
-
-    download $cert_url "-O $cert_path"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
-    openssl x509 -inform der -in "$cert_path" -out "$cert_directory/R1GlobalSignRoot.pem"  2>> "$logs_path/ssl_certificate" 1>> "$logs_path/ssl_certificate"
-
     echo "  * Generating environment configuration ($env_root/environment)"
     get_ruby_environment > $env_root/environment
     source $env_root/environment
 
     echo "  * Updating Rubygems"
-    $usr_path/bin/gem update --system 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
+    $usr_path/bin/gem update --system --no-document 2>> "$logs_path/rubygems" 1>> "$logs_path/rubygems"
     handle_failure "rubygems"
 
     echo "  * Installing Bundler"
-    $usr_path/bin/gem install bundler --no-ri  --no-rdoc  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
+    $usr_path/bin/gem install bundler --no-document  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
     handle_failure "bundler"
-}
-
-#
-# Downloads and places the PhantomJS 2.1.1 executable in the package.
-#
-install_phantomjs() {
-    base="https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1"
-    install_location="$usr_path/bin/phantomjs"
-
-    if [[ -e $install_location ]]; then
-        echo "  * Found at $install_location"
-        return
-    fi
-
-    if [[ "$(operating_system)" == "linux" ]]; then
-        os="$(operating_system)-$(architecture)"
-        ext="tar.bz2"
-    elif [[ "$(operating_system)" == *cygwin_nt* ]]; then
-        os="windows"
-        ext="zip"
-    elif [[ "$(operating_system)" == "darwin" ]]; then
-        os="macosx"
-        ext="zip"
-    else
-        echo "  * Could not find suitable package for: $(operating_system)-$(architecture)"
-        return
-    fi
-
-    url="$base-$os.$ext"
-
-    download $url "-O $archives_path/phantomjs.$ext"
-
-    if [[ $ext == "zip" ]]; then
-        unzip "$archives_path/phantomjs.$ext" -d $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
-    else
-        tar xvf "$archives_path/phantomjs.$ext" -C $src_path 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
-    fi
-
-    handle_failure "phantomjs"
-
-    if [[ "$(operating_system)" == "linux" || "$(operating_system)" == "darwin" ]]; then
-        cp $src_path/phantomjs-*/bin/phantomjs $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
-        handle_failure "phantomjs"
-    elif [[ "$(operating_system)" == *cygwin_nt* ]]; then
-        cp $src_path/phantomjs-*/phantomjs.exe $install_location 2>> "$logs_path/phantomjs" 1>> "$logs_path/phantomjs"
-        handle_failure "phantomjs"
-    fi
 }
 
 download_arachni() {
@@ -705,17 +657,17 @@ download_arachni() {
 #
 install_arachni() {
 
-    echo "  * Installing"
+    echo "  * Installing bundle"
 
     cd $system_path/arachni-ui-web
 
-    $gem_path/bin/bundle install 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    $gem_path/bin/bundle install --binstubs 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     # If we don't do this Rails 4 will keep printing annoying messages when using the runner
     # or console.
-    yes | $gem_path/bin/bundle exec $gem_path/bin/rake rails:update:bin 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
-    handle_failure "arachni-ui-web"
+    # yes | $gem_path/bin/bundle exec $gem_path/bin/rake rails:update:bin 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    # handle_failure "arachni-ui-web"
 
     echo "  * Precompiling assets"
     $gem_path/bin/bundle exec $gem_path/bin/rake assets:precompile 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
@@ -724,7 +676,7 @@ install_arachni() {
     echo "  * Setting-up the database"
     $gem_path/bin/bundle exec $gem_path/bin/rake db:migrate 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
-    $gem_path/bin/bundle exec $gem_path/bin/rake db:setup 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
+    DISABLE_DATABASE_ENVIRONMENT_CHECK=1 $gem_path/bin/bundle exec $gem_path/bin/rake db:setup 2>> "$logs_path/arachni-ui-web" 1>> "$logs_path/arachni-ui-web"
     handle_failure "arachni-ui-web"
 
     echo "  * Writing full version to VERSION file"
@@ -769,6 +721,10 @@ install_bin_wrappers() {
     chmod +x "$root/bin/arachni_shell"
     echo "  * $root/bin/arachni_shell"
 
+    get_chromedriver_script > "$usr_path/bin/chromedriver"
+    chmod +x "$usr_path/bin/chromedriver"
+    echo "  * $usr_path/bin/chromedriver"
+
     cd $env_root/arachni-ui-web/bin
     for bin in arachni*; do
         echo "  * $root/bin/$bin => $env_root/arachni-ui-web/bin/$bin"
@@ -779,20 +735,14 @@ install_bin_wrappers() {
 }
 
 echo
-echo '# (1/7) Creating directories'
+echo '# (1/6) Creating directories'
 echo '---------------------------------'
 setup_dirs
 
 echo
-echo '# (2/7) Installing dependencies'
+echo '# (2/6) Installing dependencies'
 echo '-----------------------------------'
 install_libs
-
-echo
-echo '# (3/7) Installing PhantomJS'
-echo '-----------------------------------'
-install_phantomjs
-echo
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
     mkdir -p $clean_build/system/
@@ -801,22 +751,22 @@ if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
 fi
 
 echo
-echo '# (4/7) Downloading Arachni'
+echo '# (3/6) Downloading Arachni'
 echo '-------------------------------------------'
 download_arachni
 
 echo
-echo '# (5/7) Preparing the Ruby environment'
+echo '# (4/6) Preparing the Ruby environment'
 echo '-------------------------------------------'
 prepare_ruby
 
 echo
-echo '# (6/7) Installing Arachni'
+echo '# (5/6) Installing Arachni'
 echo '-------------------------------'
 install_arachni
 
 echo
-echo '# (7/7) Installing bin wrappers'
+echo '# (6/6) Installing bin wrappers'
 echo '------------------------------------'
 install_bin_wrappers
 
@@ -871,7 +821,7 @@ Useful resources:
     * Code Documentation - http://rubydoc.info/github/Arachni/arachni
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
-    * Copyright          - 2010-2017 Sarosys LLC
+    * Copyright          - 2010-2022 Ecsypno LLC
 
 Have fun ;)
 
