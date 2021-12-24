@@ -94,10 +94,8 @@ libs+=(
     https://curl.haxx.se/download/curl-7.46.0.tar.gz
     https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     https://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
+    https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
     https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.9.tar.gz
-    https://netix.dl.sourceforge.net/project/expat/expat/2.4.2/expat-2.4.2.tar.gz
-    # Stick with this version to avoid build errors on OSX.
-    https://iweb.dl.sourceforge.net/project/freetype/freetype2/2.5.3/freetype-2.5.3.tar.gz
 )
 
 #
@@ -123,10 +121,8 @@ libs_so+=(
     libcurl
     libyaml
     postgresql
+    libjemalloc
     ruby
-    libexpat
-    libfreetype
-    libfontconfig
 )
 
 if [[ ! -z "$1" ]]; then
@@ -196,13 +192,11 @@ configure_postgresql="./configure --without-readline \
 --with-libraries=$configure_prefix/lib \
 --bindir=$usr_path/bin"
 
-configure_libxslt="./configure --with-libxml-prefix=$configure_prefix"
-
-configure_libxml2="./configure --without-python"
-
 configure_ruby="./configure --with-opt-dir=$configure_prefix \
 --with-libyaml-dir=$configure_prefix \
 --with-zlib-dir=$configure_prefix \
+--with-jemalloc
+--with-jemalloc-dir=$configure_prefix \
 --with-openssl-dir=$configure_prefix \
 --disable-install-doc --enable-shared"
 
@@ -261,10 +255,6 @@ configure_curl="./configure \
 --disable-gopher \
 --disable-rtmp \
 --disable-cookies"
-
-configure_fontconfig="FREETYPE_CFLAGS=\"-I$usr_path/include/freetype2\" \
-FREETYPE_LIBS=\"-L$usr_path/lib -lfreetype -lz\" \
-./configure --with-expat=$usr_path"
 
 #
 # Creates the directory structure for the self-contained package.
@@ -359,7 +349,7 @@ extract_archive() {
     fi
 
     echo "  * Extracting"
-    tar xvf $archives_path/$1*.tar.gz -C $dir 2>> $logs_path/$1 1>> $logs_path/$1
+    tar xvf $archives_path/$1*.tar.* -C $dir 2>> $logs_path/$1 1>> $logs_path/$1
     handle_failure $1
 }
 
