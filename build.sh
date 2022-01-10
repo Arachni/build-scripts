@@ -93,7 +93,7 @@ fi
 libs+=(
     https://curl.haxx.se/download/curl-7.46.0.tar.gz
     https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
-    https://ftp.postgresql.org/pub/source/v9.4.5/postgresql-9.4.5.tar.gz
+    https://ftp.postgresql.org/pub/source/v14.1/postgresql-14.1.tar.gz
     https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
     https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.9.tar.gz
 )
