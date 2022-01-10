@@ -192,13 +192,22 @@ configure_postgresql="./configure --without-readline \
 --with-libraries=$configure_prefix/lib \
 --bindir=$usr_path/bin"
 
-configure_ruby="./configure --with-opt-dir=$configure_prefix \
+if [[ "Darwin" == "$(uname)" ]]; then
+    configure_ruby="./configure --with-opt-dir=$configure_prefix \
+--with-libyaml-dir=$configure_prefix \
+--with-zlib-dir=$configure_prefix \
+--with-openssl-dir=$configure_prefix \
+--disable-install-doc --enable-shared"
+else 
+    configure_ruby="./configure --with-opt-dir=$configure_prefix \
 --with-libyaml-dir=$configure_prefix \
 --with-zlib-dir=$configure_prefix \
 --with-jemalloc
 --with-jemalloc-dir=$configure_prefix \
 --with-openssl-dir=$configure_prefix \
 --disable-install-doc --enable-shared"
+fi
+
 
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
@@ -646,6 +655,8 @@ download_arachni() {
 # as a dependency, that way we kill two birds with one package.
 #
 install_arachni() {
+
+    $gem_path/bin/bundle config build.puma --with-cflags="-Wno-error=implicit-function-declaration"
 
     echo "  * Installing bundle"
 
