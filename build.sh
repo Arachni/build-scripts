@@ -50,6 +50,7 @@ deps="
     unzip
     git
     python
+    nodejs
 "
 
 for dep in $deps; do
