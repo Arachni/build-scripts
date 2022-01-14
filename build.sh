@@ -215,6 +215,9 @@ zlib no-asm no-krb5 shared"
 
 if [[ "Darwin" == "$(uname)" ]]; then
 
+    export CXX=clang++
+    export GYPFLAGS=-Dmac_deployment_target=$(defaults read loginwindow SystemVersionStampAsString)
+
     hw_machine=$(sysctl hw.machine | awk -F: '{print $2}' | sed 's/^ //')
     hw_cpu64bit=$(sysctl hw.cpu64bit_capable | awk '{print $2}')
 
