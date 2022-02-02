@@ -826,7 +826,7 @@ Useful resources:
     * Code Documentation - http://rubydoc.info/github/Arachni/arachni
     * Author             - Tasos "Zapotek" Laskos (http://twitter.com/Zap0tek)
     * Twitter            - http://twitter.com/ArachniScanner
-    * Copyright          - 2010-2022 Ecsypno LLC
+    * Copyright          - 2010-2022 Ecsypno
 
 Have fun ;)
 
