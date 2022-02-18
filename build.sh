@@ -19,7 +19,7 @@ EOF
 
 if [[ "$1" == '-h' ]] || [[ "$1" == '--help' ]]; then
     cat <<EOF
-Usage: $0 [build directory]
+Usage: $0 [buil d directory]
 
 Build directory defaults to 'arachni'.
 
