@@ -34,6 +34,7 @@ echo
 echo "# Checking for script dependencies"
 echo '----------------------------------------'
 deps="
+    ar
     gperf
     flex
     wget
@@ -501,7 +502,7 @@ export HOST_PATH=\$PATH
 # Only set paths if not already configured.
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH-\$DYLD_FALLBACK_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
-    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
+    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$env_root/opt/google/chrome:\$PATH"
     
     export C_INCLUDE_PATH="\$env_root/usr/include"
     export CPLUS_INCLUDE_PATH="\$C_INCLUDE_PATH"
@@ -509,7 +510,7 @@ if [[ \$? -ne 0 ]] ; then
     # We also set the default paths to make sure that they will be seen by the OS. 
     # There have been issues with Ruby FFI (mostly on OSX 10.11) but why risk it, 
     # set these always just to make sure.
-    export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib"
+    export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib:\$env_root/opt/google/chrome"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
     if [[ "\$operating_system" == "darwin" ]]; then
@@ -590,17 +591,6 @@ exec $1
 EOF
 }
 
-get_chromedriver_script() {
-    cat<<EOF
-#!/usr/bin/env bash
-
-export LD_LIBRARY_PATH="" 
-export PATH=\$HOST_PATH 
-
-\`which chromedriver\` "\$@"
-
-EOF
-}
 
 get_shell_script() {
     get_wrapper_environment '; export PS1="\u@\h:\w \033[0;32m\][arachni-shell]\[\033[0m\$ "; bash --noprofile --norc "$@"'
@@ -639,6 +629,31 @@ prepare_ruby() {
     echo "  * Installing Bundler"
     $usr_path/bin/gem install bundler --no-document  2>> "$logs_path/bundler" 1>> "$logs_path/bundler"
     handle_failure "bundler"
+}
+
+install_chrome() {
+    download https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb "-O $archives_path/chrome.deb"
+
+    rm -rf $build_path/tmp/chrome-data
+    mkdir $build_path/tmp/chrome-data
+    cd $build_path/tmp/chrome-data
+
+    ar x "$archives_path/chrome.deb" 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
+    tar xvf data.tar.xz  2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
+
+    rm data.tar.xz
+    rm control.tar.xz
+    rm debian-binary
+
+    rsync -a . $system_path/
+
+    rm -f $system_path/usr/bin/google-chrome-stable
+    # ln -s $system_path/opt/google/chrome/google-chrome $system_path/usr/bin/google-chrome-stable
+
+    version_details=($($system_path/opt/google/chrome/google-chrome --version))
+
+    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
+    unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
 }
 
 download_arachni() {
@@ -726,9 +741,6 @@ install_bin_wrappers() {
     chmod +x "$root/bin/arachni_shell"
     echo "  * $root/bin/arachni_shell"
 
-    get_chromedriver_script > "$usr_path/bin/chromedriver"
-    chmod +x "$usr_path/bin/chromedriver"
-    echo "  * $usr_path/bin/chromedriver"
 
     cd $env_root/arachni-ui-web/bin
     for bin in arachni*; do
@@ -740,14 +752,19 @@ install_bin_wrappers() {
 }
 
 echo
-echo '# (1/6) Creating directories'
+echo '# (1/7) Creating directories'
 echo '---------------------------------'
 setup_dirs
 
 echo
-echo '# (2/6) Installing dependencies'
+echo '# (2/7) Installing dependencies'
 echo '-----------------------------------'
 install_libs
+
+echo
+echo '# (3/7) Installing Chrome'
+echo '-----------------------------------'
+install_chrome
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
     mkdir -p $clean_build/system/
@@ -756,22 +773,22 @@ if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
 fi
 
 echo
-echo '# (3/6) Downloading Arachni'
+echo '# (4/7) Downloading Arachni'
 echo '-------------------------------------------'
 download_arachni
 
 echo
-echo '# (4/6) Preparing the Ruby environment'
+echo '# (5/7) Preparing the Ruby environment'
 echo '-------------------------------------------'
 prepare_ruby
 
 echo
-echo '# (5/6) Installing Arachni'
+echo '# (6/7) Installing Arachni'
 echo '-------------------------------'
 install_arachni
 
 echo
-echo '# (6/6) Installing bin wrappers'
+echo '# (7/7) Installing bin wrappers'
 echo '------------------------------------'
 install_bin_wrappers
 
