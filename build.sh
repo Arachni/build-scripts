@@ -97,7 +97,7 @@ libs+=(
     https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     https://ftp.postgresql.org/pub/source/v13.3/postgresql-13.3.tar.gz
     https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
-    https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.9.tar.gz
+    https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.gz
 )
 
 #
@@ -152,7 +152,7 @@ update_clean_dir=false
 # Directory of this script.
 scriptdir=`dirname $(readlink_f $0)`
 
-# Root or the package.
+# Root of the package.
 root=`readlink_f $root`
 
 # Holds a base system dir layout where the dependencies will be installed.
@@ -185,9 +185,12 @@ gem_path=$gem_home
 # For some reason assoc arrays don't work...
 #
 
-if [ `getconf LONG_BIT` == "64" ]; then
-    configure_zlib="CFLAGS=\"-m64\" ./configure"
+if [[ "Darwin" == "$(uname)" ]]; then
+    export CXX=clang++
+    export GYPFLAGS=-Dmac_deployment_target=$(defaults read loginwindow SystemVersionStampAsString)
 fi
+
+configure_zlib="CFLAGS=\"-m64\" ./configure"
 
 configure_postgresql="./configure --without-readline \
 --with-includes=$configure_prefix/include \
@@ -210,32 +213,11 @@ else
 --disable-install-doc --enable-shared"
 fi
 
-
 common_configure_openssl="-I$usr_path/include -L$usr_path/lib \
 zlib no-asm no-krb5 shared"
 
 if [[ "Darwin" == "$(uname)" ]]; then
-
-    export CXX=clang++
-    export GYPFLAGS=-Dmac_deployment_target=$(defaults read loginwindow SystemVersionStampAsString)
-
-    hw_machine=$(sysctl hw.machine | awk -F: '{print $2}' | sed 's/^ //')
-    hw_cpu64bit=$(sysctl hw.cpu64bit_capable | awk '{print $2}')
-
-    if [[ "Power Macintosh" == "$hw_machine" ]] ; then
-        if [[ $hw_cpu64bit == 1 ]]; then
-            openssl_os="darwin64-ppc-cc"
-        else
-            openssl_os="darwin-ppc-cc"
-        fi
-    else
-        if [[ $hw_cpu64bit == 1 ]]; then
-            openssl_os="darwin64-x86_64-cc"
-        else
-            openssl_os="darwin-i386-cc"
-        fi
-    fi
-    configure_openssl="./Configure $openssl_os $common_configure_openssl"
+    configure_openssl="./Configure darwin64-x86_64-cc $common_configure_openssl"
 else
     configure_openssl="./config $common_configure_openssl"
 fi
@@ -461,7 +443,7 @@ install_libs() {
 #
 get_ruby_environment() {
 
-    cd "$usr_path/lib/ruby/2.6.0/"
+    cd "$usr_path/lib/ruby/2.7.0/"
 
     possible_arch_dir=$(echo `uname -p`*)
     if [[ -d "$possible_arch_dir" ]]; then
@@ -477,7 +459,7 @@ get_ruby_environment() {
     fi
 
     if [[ -d "$arch_dir" ]]; then
-        platform_lib=":\$MY_RUBY_HOME/2.6.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.6.0/$arch_dir"
+        platform_lib=":\$MY_RUBY_HOME/2.7.0/$arch_dir:\$MY_RUBY_HOME/site_ruby/2.7.0/$arch_dir"
     fi
 
     cat<<EOF
@@ -524,11 +506,11 @@ if [[ \$? -ne 0 ]] ; then
 
 fi
 
-export RUBY_VERSION; RUBY_VERSION='ruby-2.6.9'
+export RUBY_VERSION; RUBY_VERSION='ruby-2.7.5'
 export GEM_HOME; GEM_HOME="\$env_root/gems"
 export GEM_PATH; GEM_PATH="\$env_root/gems"
 export MY_RUBY_HOME; MY_RUBY_HOME="\$env_root/usr/lib/ruby"
-export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.6.0:\$MY_RUBY_HOME/2.6.0$platform_lib
+export RUBYLIB; RUBYLIB=\$MY_RUBY_HOME:\$MY_RUBY_HOME/site_ruby/2.7.0:\$MY_RUBY_HOME/2.7.0$platform_lib
 export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 
 # Arachni packages run the system in production.
@@ -632,6 +614,38 @@ prepare_ruby() {
 }
 
 install_chrome() {
+
+  if [[ "Darwin" == "$(uname)" ]]; then
+      install_chrome_mac
+  else
+      install_chrome_linux
+  fi
+
+}
+
+install_chrome_mac() {
+    download https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg "-O $archives_path/chrome.dmg"
+
+    rm -rf $build_path/tmp/chrome-data
+    rm -rf "$system_path/usr/bin/Google Chrome.app/"
+
+    mkdir $build_path/tmp/chrome-data
+    cd $build_path/tmp/chrome-data
+
+    7zz x "$archives_path/chrome.dmg" 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
+    cp -R "Google Chrome/Google Chrome.app" $system_path/usr/bin/
+    handle_failure "chrome"
+
+    cd - 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
+
+    version_details=($($system_path/usr/bin/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version))
+
+    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
+    unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
+    handle_failure "chromedriver"
+}
+
+install_chrome_linux() {
     download https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb "-O $archives_path/chrome.deb"
 
     rm -rf $build_path/tmp/chrome-data
@@ -647,8 +661,10 @@ install_chrome() {
 
     rsync -a . $system_path/
 
+    cd - 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
+
+    # Remove faulty symlink.
     rm -f $system_path/usr/bin/google-chrome-stable
-    # ln -s $system_path/opt/google/chrome/google-chrome $system_path/usr/bin/google-chrome-stable
 
     version_details=($($system_path/opt/google/chrome/google-chrome --version))
 
@@ -816,7 +832,7 @@ cp "$scriptdir/templates/TROUBLESHOOTING.tpl" "$root/TROUBLESHOOTING"
 
 echo "  * Adjusting shebangs"
 if [[ `uname` == "Darwin" ]]; then
-    LC_ALL=C find $env_root/ -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
+    find $env_root/ -type f -exec sed -i '' 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \; 2>> /dev/null 1>> /dev/null
 else
     find $env_root/ -type f -exec sed -i 's/#!\/.*\/ruby/#!\/usr\/bin\/env ruby/g' {} \;
 fi
