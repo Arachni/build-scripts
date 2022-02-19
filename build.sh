@@ -484,7 +484,7 @@ export HOST_PATH=\$PATH
 # Only set paths if not already configured.
 echo "\$LD_LIBRARY_PATH-\$DYLD_LIBRARY_PATH-\$DYLD_FALLBACK_LIBRARY_PATH" | egrep \$env_root > /dev/null
 if [[ \$? -ne 0 ]] ; then
-    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$env_root/opt/google/chrome:\$PATH"
+    export PATH; PATH="\$env_root/../bin:\$env_root/usr/bin:\$env_root/gems/bin:\$PATH"
     
     export C_INCLUDE_PATH="\$env_root/usr/include"
     export CPLUS_INCLUDE_PATH="\$C_INCLUDE_PATH"
@@ -492,7 +492,7 @@ if [[ \$? -ne 0 ]] ; then
     # We also set the default paths to make sure that they will be seen by the OS. 
     # There have been issues with Ruby FFI (mostly on OSX 10.11) but why risk it, 
     # set these always just to make sure.
-    export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib:\$env_root/opt/google/chrome"
+    export LIBRARY_PATH="\$env_root/usr/lib:/usr/lib:/usr/local/lib"
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
     if [[ "\$operating_system" == "darwin" ]]; then
@@ -665,8 +665,14 @@ install_chrome_linux() {
 
     # Remove faulty symlink.
     rm -f $system_path/usr/bin/google-chrome-stable
+    rm -f $system_path/usr/bin/google-chrome
+    rm -f $system_path/usr/bin/chrome
 
-    version_details=($($system_path/opt/google/chrome/google-chrome --version))
+    ln -s ../../opt/google/chrome/google-chrome $system_path/usr/bin/google-chrome-stable
+    ln -s ../../opt/google/chrome/google-chrome $system_path/usr/bin/google-chrome
+    ln -s ../../opt/google/chrome/google-chrome $system_path/usr/bin/chrome
+
+    version_details=($($system_path/usr/bin/google-chrome --version))
 
     download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
