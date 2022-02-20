@@ -41,10 +41,12 @@ instructions outlined in this Wiki page:
 Outdated GLIBC version on Linux
 -------------------------------
 
-This package is self-contained but it does have one basic dependency, glibc >= 2.12.
-If you haven't updated your system for a while you may see the following message:
+This package is self-contained but it does have one basic dependency, glibc >= 2.31.
+If you haven't updated your system you may see the following message:
 
-    ruby: /lib/libc.so.6: version GLIBC_2.12 not found
+    ruby: /lib/libc.so.6: version GLIBC_2.31 not found
+
+or even get a segfault upon startup.
 
 If you do get this error please update your system and try again.
 
