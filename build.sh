@@ -205,7 +205,7 @@ if [[ "Darwin" == "$(uname)" ]]; then
 --with-zlib-dir=$configure_prefix \
 --with-openssl-dir=$configure_prefix \
 --disable-install-doc --enable-shared"
-else 
+else
     configure_ruby="./configure --with-opt-dir=$configure_prefix \
 --with-libyaml-dir=$configure_prefix \
 --with-zlib-dir=$configure_prefix \
@@ -270,7 +270,6 @@ setup_dirs( ) {
         $root/logs/webui
         $system_path/gems
         $system_path/home/arachni
-        $system_path/home/arachni/.fonts
         $system_path/usr/bin
         $system_path/usr/include
         $system_path/usr/info
