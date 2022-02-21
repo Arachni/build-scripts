@@ -96,6 +96,7 @@ fi
 libs+=(
     https://curl.haxx.se/download/curl-7.46.0.tar.gz
     https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
+    https://ftp.postgresql.org/pub/source/v13.3/postgresql-13.3.tar.gz
     https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
     https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.gz
 )
@@ -123,6 +124,7 @@ fi
 libs_so+=(
     libcurl
     libyaml
+    postgresql
     libjemalloc
     ruby
 )
