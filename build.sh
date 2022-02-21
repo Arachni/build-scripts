@@ -78,6 +78,7 @@ arachni_tarball_url=`tarball_url`
 # All system library dependencies in proper installation order.
 #
 libs=(
+    https://ftp.gnu.org/gnu/libidn/libidn-1.11.tar.gz
     https://zlib.net/zlib-1.2.11.tar.gz
     # Stick with the 1.0.1 branch due to:
     #   https://github.com/Arachni/arachni/issues/653
@@ -107,6 +108,7 @@ libs+=(
 # Their order should correspond to the entries in the 'libs' array.
 #
 libs_so=(
+    libidn
     libz
     libssl
     libsqlite3
@@ -156,7 +158,7 @@ scriptdir=`dirname $(readlink_f $0)`
 root=`readlink_f $root`
 
 # Holds a base system dir layout where the dependencies will be installed.
-system_path="$root/system"
+system_path="$root/.system"
 
 # Build directories holding downloaded archives, sources, build logs, etc.
 build_path="$root/build"
@@ -264,8 +266,8 @@ setup_dirs( ) {
         $build_path/src
         $build_path/tmp
         $root/bin
-        $system_path/logs/framework
-        $system_path/logs/webui
+        $root/logs/framework
+        $root/logs/webui
         $system_path/gems
         $system_path/home/arachni
         $system_path/home/arachni/.fonts
@@ -285,8 +287,6 @@ setup_dirs( ) {
             echo " -- already exists."
         fi
     done
-
-    cp -R "$scriptdir/data/fonts/"* "$system_path/home/arachni/.fonts/"
 
     cd - > /dev/null
 }
@@ -516,8 +516,8 @@ export IRBRC; IRBRC="\$env_root/usr/lib/ruby/.irbrc"
 # Arachni packages run the system in production.
 export RAILS_ENV=production
 
-export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/logs/framework"
-export ARACHNI_WEBUI_LOGDIR="\$env_root/logs/webui"
+export ARACHNI_FRAMEWORK_LOGDIR="\$env_root/../logs/framework"
+export ARACHNI_WEBUI_LOGDIR="\$env_root/../logs/webui"
 
 EOF
 }
@@ -564,7 +564,7 @@ get_wrapper_environment() {
 #!/usr/bin/env bash
 
 source "\$(dirname \$0)/readlink_f.sh"
-source "\$(dirname "\$(readlink_f "\${0}")")"/../system/setenv
+source "\$(dirname "\$(readlink_f "\${0}")")"/../.system/setenv
 
 export HOME="\$env_root/home/arachni"
 
@@ -732,8 +732,8 @@ install_arachni() {
 install_bin_wrappers() {
     cp "$scriptdir/lib/readlink_f.sh" "$root/bin/"
 
-    get_setenv > "$root/system/setenv"
-    chmod +x "$root/system/setenv"
+    get_setenv > "$root/.system/setenv"
+    chmod +x "$root/.system/setenv"
 
     web_executables="
         create_user
@@ -789,9 +789,9 @@ echo '-----------------------------------'
 install_chrome
 
 if [[ ! -d $clean_build ]] || [[ $update_clean_dir == true ]]; then
-    mkdir -p $clean_build/system/
+    mkdir -p $clean_build/.system/
     echo "==== Backing up clean build directory ($clean_build)."
-    cp -R $usr_path $clean_build/system/
+    cp -R $usr_path $clean_build/.system/
 fi
 
 echo
