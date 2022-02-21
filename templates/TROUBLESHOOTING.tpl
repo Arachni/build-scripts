@@ -3,7 +3,7 @@ DEPENDENCIES
 
 Due to the use of Chrome, there are external dependencies that need to be met.
 
-Debian
+Ubuntu
 -------
 
 ```
