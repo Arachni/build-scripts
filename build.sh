@@ -527,19 +527,19 @@ get_setenv() {
 
 env_root="\$(dirname \${BASH_SOURCE[0]})"
 
-writtable="
+writable="
     arachni-ui-web/config/component_cache
     arachni-ui-web/db
     arachni-ui-web/tmp
-    logs
+    ../logs
     home
 "
 
-for directory in \$writtable; do
+for directory in \$writable; do
     directory="\$env_root/\$directory"
 
     if [[ ! -w "\$directory" ]]; then
-        echo "[ERROR] Directory and subdirectories must be writtable: \$directory"
+        echo "[ERROR] Directory and subdirectories must be writable: \$directory"
         exit 1
     fi
 done
