@@ -3,8 +3,8 @@ DEPENDENCIES
 
 Due to the use of Chrome, there are external dependencies that need to be met.
 
-Debian
--------
+Debian-based
+------------
 
   sudo apt-get update
   wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -55,10 +55,10 @@ instructions outlined in this Wiki page:
 
     https://github.com/Arachni/arachni-ui-web/wiki/Database#PostgreSQL
 
-Outdated GLIBC version on Linux
+Linux
 -------------------------------
 
-This package is self-contained but it does have one basic dependency, glibc >= 2.31.
+This depends on glibc >= 2.31.
 If you haven't updated your system you may see the following message:
 
     ruby: /lib/libc.so.6: version GLIBC_2.31 not found
@@ -67,9 +67,9 @@ or even get a segfault upon startup.
 
 If you do get this error please update your system and try again.
 
-Segmentation fault on OS X
+OS X
 --------------------------
 
-The package and the binaries it bundles were built on OS X 10.8 Mountain Lion,
+The package and the binaries it bundles were built on OS X 16.7 Catalina,
 thus, if you experience segmentation faults while trying to run Arachni please
 ensure that you are using the same or later OS X version.
