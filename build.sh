@@ -639,10 +639,10 @@ install_chrome_mac() {
 
     cd - 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
 
-#    version_details=($($system_path/usr/bin/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version))
+    version_details=($($system_path/usr/bin/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version))
 
-#    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
-    download "https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
+    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
+#    download "https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
     handle_failure "chromedriver"
 }
