@@ -94,6 +94,7 @@ if [[ "Darwin" != "$(uname)" ]]; then
 fi
 
 libs+=(
+    https://github.com/libffi/libffi/releases/download/v3.4.2/libffi-3.4.2.tar.gz
     https://curl.haxx.se/download/curl-7.46.0.tar.gz
     https://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz
     https://ftp.postgresql.org/pub/source/v13.3/postgresql-13.3.tar.gz
@@ -122,6 +123,7 @@ if [[ "Darwin" != "$(uname)" ]]; then
 fi
 
 libs_so+=(
+    libffi
     libcurl
     libyaml
     postgresql
