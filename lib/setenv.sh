@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright 2010-2017 Sarosys LLC <http://www.sarosys.com>
+# Copyright 2010-2022 Ecsypno <http://www.ecsypno.com>
 
 source `dirname $0`"/lib/readlink_f.sh"
 source `dirname $0`"/lib/info.sh"
