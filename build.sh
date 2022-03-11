@@ -700,6 +700,7 @@ download_arachni() {
 install_arachni() {
 
     $gem_path/bin/bundle config build.puma --with-cflags="-Wno-error=implicit-function-declaration"
+    $gem_path/bin/bundle config --local build.sassc --disable-march-tune-native
 
     echo "  * Installing bundle"
 
