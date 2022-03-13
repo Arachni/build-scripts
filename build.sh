@@ -88,7 +88,7 @@ libs=(
 
 if [[ "Darwin" != "$(uname)" ]]; then
     libs+=(
-        http://ftp.vim.org/ftp/gnu/ncurses/ncurses-6.0.tar.gz
+        http://ftp.vim.org/ftp/gnu/ncurses/ncurses-6.3.tar.gz
         https://distfiles.macports.org/heimdal/heimdal-1.5.3.tar.gz
     )
 fi
