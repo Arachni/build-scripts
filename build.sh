@@ -549,7 +549,12 @@ done
 if [[ -s "\$env_root/environment" ]]; then
     source "\$env_root/environment"
 else
-    echo "ERROR: Missing environment file: '\$env_root/environment" >&2
+    echo "[ERROR] Missing environment file: '\$env_root/environment" >&2
+    exit 1
+fi
+
+if [[ \$EUID -eq 0 ]]; then
+    echo "[ERROR] Cannot run as root."
     exit 1
 fi
 
