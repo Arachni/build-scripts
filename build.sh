@@ -682,7 +682,9 @@ install_chrome_linux() {
     version_details=($($system_path/usr/bin/google-chrome --version))
 
     download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
+#    download "https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
+    handle_failure "chromedriver"
 }
 
 download_arachni() {
