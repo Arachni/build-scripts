@@ -644,10 +644,9 @@ install_chrome_mac() {
 
     cd - 2>> "$logs_path/chrome" 1>> "$logs_path/chrome"
 
-    version_details=($($system_path/usr/bin/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version))
+    version=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 
-    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
-#    download "https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
+    download "https://chromedriver.storage.googleapis.com/$version/chromedriver_mac64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
     handle_failure "chromedriver"
 }
@@ -679,9 +678,9 @@ install_chrome_linux() {
     ln -s ../../opt/google/chrome/google-chrome $system_path/usr/bin/google-chrome
     ln -s ../../opt/google/chrome/google-chrome $system_path/usr/bin/chrome
 
-    version_details=($($system_path/usr/bin/google-chrome --version))
+    version=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 
-    download "https://chromedriver.storage.googleapis.com/${version_details[2]}/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
+        download "https://chromedriver.storage.googleapis.com/$version/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
 #    download "https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
     handle_failure "chromedriver"
