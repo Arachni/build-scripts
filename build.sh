@@ -497,13 +497,8 @@ if [[ \$? -ne 0 ]] ; then
     export LD_LIBRARY_PATH="\$LIBRARY_PATH"
 
     if [[ "\$operating_system" == "darwin" ]]; then
-        # OSX >= 10.11 idiosyncrasy.
-        if [[ \`version "\$(sw_vers -productVersion)"\` -gt \$(version "10.10") ]]; then
-            export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
-        else
-            export DYLD_LIBRARY_PATH="\$LIBRARY_PATH"
-        fi  
-    fi  
+        export DYLD_FALLBACK_LIBRARY_PATH="\$LIBRARY_PATH"
+    fi
 
 fi
 
@@ -680,7 +675,7 @@ install_chrome_linux() {
 
     version=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
 
-        download "https://chromedriver.storage.googleapis.com/$version/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
+    download "https://chromedriver.storage.googleapis.com/$version/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
 #    download "https://chromedriver.storage.googleapis.com/101.0.4951.41/chromedriver_linux64.zip" "-O $archives_path/chromedriver.zip"
     unzip -o $archives_path/chromedriver.zip -d $system_path/usr/bin/  2>> "$logs_path/chromedriver" 1>> "$logs_path/chromedriver"
     handle_failure "chromedriver"
